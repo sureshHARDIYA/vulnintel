@@ -245,12 +245,21 @@ mod tests {
     fn preserves_repeated_observations_and_rolls_back_invalid_pages() {
         let mut store = Store::open(":memory:").unwrap();
         let id = "CVE-2026-1234".to_owned();
-        store.save_page("nvd", &[(id.clone(), json!({"status":"new"}))], 2).unwrap();
-        store.save_page("nvd", &[(id.clone(), json!({"status":"modified"}))], 3).unwrap();
+        store
+            .save_page("nvd", &[(id.clone(), json!({"status":"new"}))], 2)
+            .unwrap();
+        store
+            .save_page("nvd", &[(id.clone(), json!({"status":"modified"}))], 3)
+            .unwrap();
         assert_eq!(store.count("nvd").unwrap(), 1);
         assert_eq!(store.observation_count("nvd").unwrap(), 2);
-        assert_eq!(store.read("nvd", &id).unwrap().unwrap()["status"], "modified");
-        assert!(store.save_page("nvd", &[(id, json!({})), ("".into(), json!({}))], 4).is_err());
+        assert_eq!(
+            store.read("nvd", &id).unwrap().unwrap()["status"],
+            "modified"
+        );
+        assert!(store
+            .save_page("nvd", &[(id, json!({})), ("".into(), json!({}))], 4)
+            .is_err());
         assert_eq!(store.observation_count("nvd").unwrap(), 2);
         assert_eq!(store.page("nvd").unwrap(), 3);
     }
