@@ -8,11 +8,11 @@ use serde_json::Value;
 pub fn osv_coordinates(component: &Component) -> Option<(String, String, String)> {
     let purl = component.purl.as_deref()?.strip_prefix("pkg:")?;
     let (identity, version) = purl.split_once('@')?;
-    if version.is_empty() || version.contains(['?', '#']) {
+    if version.is_empty() || version.contains('?') || version.contains('#') {
         return None;
     }
     let (kind, name) = identity.split_once('/')?;
-    if name.is_empty() || name.contains(['?', '#']) {
+    if name.is_empty() || name.contains('?') || name.contains('#') {
         return None;
     }
     let ecosystem = match kind {
