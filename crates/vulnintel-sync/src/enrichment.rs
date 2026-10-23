@@ -11,11 +11,7 @@ pub struct ImportReport {
 }
 
 /// Import a complete CISA KEV snapshot. Invalid entries abort before any writes.
-pub fn import_kev(
-    store: &mut Store,
-    feed: &Value,
-    observed_at: &str,
-) -> SyncResult<ImportReport> {
+pub fn import_kev(store: &mut Store, feed: &Value, observed_at: &str) -> SyncResult<ImportReport> {
     let entries = parse_kev(feed, observed_at)?;
     let records: Vec<_> = entries
         .into_iter()
@@ -29,11 +25,7 @@ pub fn import_kev(
 }
 
 /// Import a complete or partial EPSS API response. Never interpret omitted CVEs as safe.
-pub fn import_epss(
-    store: &mut Store,
-    feed: &Value,
-    observed_at: &str,
-) -> SyncResult<ImportReport> {
+pub fn import_epss(store: &mut Store, feed: &Value, observed_at: &str) -> SyncResult<ImportReport> {
     let entries = parse_epss(feed, observed_at)?;
     let records: Vec<_> = entries
         .into_iter()
@@ -108,7 +100,10 @@ mod tests {
         let found = threat_for_cve(&store, "CVE-2026-12345").unwrap();
         assert!(found.kev.is_some());
         assert_eq!(found.epss.unwrap().probability, 0.03);
-        assert!(threat_for_cve(&store, "CVE-2026-99999").unwrap().kev.is_none());
+        assert!(threat_for_cve(&store, "CVE-2026-99999")
+            .unwrap()
+            .kev
+            .is_none());
         let invalid = json!({"vulnerabilities":[{"cveID":"bad","dateAdded":"2026-10-20"}]});
         assert!(import_kev(&mut store, &invalid, "2026-10-23T08:02:00Z").is_err());
         assert_eq!(store.count("cisa_kev").unwrap(), 1);
