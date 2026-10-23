@@ -27,7 +27,7 @@ impl Store {
                 observed_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
                 PRIMARY KEY(provider, record_id)
              );
-             CREATE TABLE IF NOT EXISTS sync_windows (
+             CREATE TABLE IF NOT EXISTS record_observations (\n                observation_id INTEGER PRIMARY KEY AUTOINCREMENT,\n                provider TEXT NOT NULL,\n                record_id TEXT NOT NULL,\n                payload TEXT NOT NULL,\n                observed_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))\n             );\n             CREATE INDEX IF NOT EXISTS idx_record_observations_lookup\n                ON record_observations(provider, record_id, observation_id);\n             CREATE TABLE IF NOT EXISTS sync_windows (
                 provider TEXT PRIMARY KEY,
                 completed_through TEXT NOT NULL,
                 updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
@@ -103,8 +103,7 @@ impl Store {
             if id.is_empty() {
                 return Err("Record ID cannot be empty".into());
             }
-            tx.execute(
-                "INSERT INTO records(provider, record_id, payload) VALUES (?1, ?2, ?3)
+            tx.execute(\n                "INSERT INTO record_observations(provider, record_id, payload) VALUES (?1, ?2, ?3)",\n                params![provider, id, serde_json::to_string(payload)?],\n            )?;\n            tx.execute(\n                "INSERT INTO records(provider, record_id, payload) VALUES (?1, ?2, ?3)
                  ON CONFLICT(provider, record_id) DO UPDATE SET
                     payload = excluded.payload,
                     observed_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')",
@@ -122,7 +121,7 @@ impl Store {
         Ok(())
     }
 
-    pub fn count(&self, provider: &str) -> SyncResult<u64> {
+    /// Number of committed source observations, including repeated and changed records.\n    pub fn observation_count(&self, provider: &str) -> SyncResult<u64> {\n        Ok(self.conn.query_row(\n            "SELECT COUNT(*) FROM record_observations WHERE provider = ?1",\n            [provider],\n            |row| row.get(0),\n        )?)\n    }\n\n    pub fn count(&self, provider: &str) -> SyncResult<u64> {
         Ok(self.conn.query_row(
             "SELECT COUNT(*) FROM records WHERE provider = ?1",
             [provider],
@@ -168,8 +167,7 @@ fn persist(
         if id.is_empty() {
             return Err("Record ID cannot be empty".into());
         }
-        tx.execute(
-            "INSERT INTO records (provider, record_id, payload) VALUES (?1, ?2, ?3)
+        tx.execute(\n            "INSERT INTO record_observations(provider, record_id, payload) VALUES (?1, ?2, ?3)",\n            params![provider, id, serde_json::to_string(payload)?],\n        )?;\n        tx.execute(\n            "INSERT INTO records (provider, record_id, payload) VALUES (?1, ?2, ?3)
              ON CONFLICT(provider, record_id) DO UPDATE SET
                 payload = excluded.payload,
                 observed_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')",
@@ -213,6 +211,20 @@ mod tests {
         assert!(store
             .finish_window("nvd", &records, "2026-10-22T00:00:00Z")
             .is_err());
+    }
+
+    #[test]
+    fn preserves_repeated_observations_and_rolls_back_invalid_pages() {
+        let mut store = Store::open(":memory:").unwrap();
+        let id = "CVE-2026-1234".to_owned();
+        store.save_page("nvd", &[(id.clone(), json!({"status":"new"}))], 2).unwrap();
+        store.save_page("nvd", &[(id.clone(), json!({"status":"modified"}))], 3).unwrap();
+        assert_eq!(store.count("nvd").unwrap(), 1);
+        assert_eq!(store.observation_count("nvd").unwrap(), 2);
+        assert_eq!(store.read("nvd", &id).unwrap().unwrap()["status"], "modified");
+        assert!(store.save_page("nvd", &[(id, json!({})), ("".into(), json!({}))], 4).is_err());
+        assert_eq!(store.observation_count("nvd").unwrap(), 2);
+        assert_eq!(store.page("nvd").unwrap(), 3);
     }
 
     #[test]
