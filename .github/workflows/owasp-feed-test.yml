@@ -1,0 +1,44 @@
+name: OWASP integration feed test
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "40 7 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify OWASP public data and optional Dependency-Track instance
+        env:
+          DTRACK_URL: ${{ vars.DTRACK_URL }}
+          DTRACK_API_KEY: ${{ secrets.DTRACK_API_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request
+          def get(url, headers=None):
+              request = urllib.request.Request(url, headers={"User-Agent":"VulnIntel-OWASP-Smoke/0.1", **(headers or {})})
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  return json.load(response)
+          # ASVS 5.0 machine-readable requirements from the official OWASP repo.
+          url = "https://raw.githubusercontent.com/OWASP/ASVS/v5.0.0/5.0/docs_en/OWASP_Application_Security_Verification_Standard_5.0.0_en.csv"
+          request = urllib.request.Request(url,headers={"User-Agent":"VulnIntel-OWASP-Smoke/0.1"})
+          try:
+              with urllib.request.urlopen(request,timeout=30) as response:
+                  body=response.read()
+              if len(body)<1000: raise RuntimeError("ASVS content unexpectedly small")
+              print(f"OWASP ASVS: OK ({len(body)} bytes)")
+          except Exception as exc:
+              raise RuntimeError(f"OWASP ASVS fetch failed: {exc}") from exc
+          base=os.environ.get("DTRACK_URL","").strip().rstrip("/")
+          key=os.environ.get("DTRACK_API_KEY","").strip()
+          if base and key:
+              if not base.startswith("https://"): raise RuntimeError("DTRACK_URL must use HTTPS")
+              # Dependency-Track API is an authenticated integration, not an OWASP public vulnerability feed.
+              data=get(base+"/api/version",{"X-Api-Key":key})
+              print("Dependency-Track API: OK",str(data)[:160])
+          else:
+              print("Dependency-Track API: SKIPPED (configure DTRACK_URL variable and DTRACK_API_KEY secret)")
+          PY
