@@ -15,7 +15,9 @@ pub struct AsvsRequirement {
     pub level: String,
 }
 
-pub fn parse_asvs_csv(reader: impl Read) -> Result<Vec<AsvsRequirement>, Box<dyn Error + Send + Sync>> {
+pub fn parse_asvs_csv(
+    reader: impl Read,
+) -> Result<Vec<AsvsRequirement>, Box<dyn Error + Send + Sync>> {
     let mut csv = csv::Reader::from_reader(reader);
     let mut requirements = Vec::new();
     for record in csv.deserialize() {
