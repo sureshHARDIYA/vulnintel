@@ -10,6 +10,7 @@ OUTPUT.mkdir(parents=True, exist_ok=True)
 SOURCES = [
     ("github", "https://api.github.com/advisories?type=reviewed&per_page=100"),
     ("cisa_kev", "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"),
+    ("nvd", "https://services.nvd.nist.gov/rest/json/cves/2.0?resultsPerPage=100"),
 ]
 status = {}
 records = []
@@ -32,6 +33,22 @@ for name, url in SOURCES:
                     "source": "GitHub Advisories",
                 })
             status[name] = {"ok": True, "count": len(payload)}
+        elif name == "nvd":
+            items = payload.get("vulnerabilities", [])
+            for item in items:
+                cve = item.get("cve", {})
+                descriptions = cve.get("descriptions", [])
+                summary = next((d.get("value", "") for d in descriptions if d.get("lang") == "en"), "")
+                records.append({
+                    "id": cve.get("id", ""),
+                    "cve": cve.get("id", ""),
+                    "summary": summary,
+                    "severity": "See NVD",
+                    "published": cve.get("published"),
+                    "url": "https://nvd.nist.gov/vuln/detail/" + cve.get("id", ""),
+                    "source": "NVD",
+                })
+            status[name] = {"ok": True, "count": len(items)}
         else:
             known = payload.get("vulnerabilities", [])
             for item in known:
@@ -50,13 +67,13 @@ for name, url in SOURCES:
         print(f"WARNING: {name} unavailable: {exc}", flush=True)
 
 # An empty/error snapshot is not a valid publication. Fail so the previous site stays intact.
-if not records or not all(s["ok"] for s in status.values()):
+if not records or not all(status[name]["ok"] for name in ("github", "cisa_kev")):
     raise SystemExit("Feed collection incomplete; preserving previously deployed site")
 records.sort(key=lambda item: item.get("published") or "", reverse=True)
 snapshot = {
     "generated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
     "sources": status,
-    "description": "Public advisory samples; not complete coverage and not application exposure analysis.",
+    "description": "Public advisory samples; NVD is optional, OSV is package-query based and EPSS is enrichment. Not complete coverage or application exposure analysis.",
     "records": records,
 }
 (OUTPUT / "advisories.json").write_text(json.dumps(snapshot, ensure_ascii=False), encoding="utf-8")
