@@ -70,7 +70,10 @@ pub fn github(v: &Value) -> Result<Vec<UnifiedAdvisory>, String> {
 }
 
 pub fn nvd(v: &Value) -> Result<Vec<UnifiedAdvisory>, String> {
-    let rows = v.get("vulnerabilities").and_then(Value::as_array).ok_or("NVD: expected vulnerabilities")?;
+    let rows = v
+        .get("vulnerabilities")
+        .and_then(Value::as_array)
+        .ok_or("NVD: expected vulnerabilities")?;
     rows.iter()
         .map(|row| {
             let entry = row.get("cve").ok_or("Missing CVE")?;
@@ -78,9 +81,12 @@ pub fn nvd(v: &Value) -> Result<Vec<UnifiedAdvisory>, String> {
             if !cve(id) {
                 return Err("Invalid CVE ID".to_owned());
             }
-            let summary = entry.get("descriptions").and_then(Value::as_array)
+            let summary = entry
+                .get("descriptions")
+                .and_then(Value::as_array)
                 .and_then(|a| a.iter().find(|d| field(d, "lang") == Some("en")))
-                .and_then(|d| field(d, "value")).map(str::to_owned);
+                .and_then(|d| field(d, "value"))
+                .map(str::to_owned);
             Ok(make(
                 id,
                 None,
@@ -98,7 +104,10 @@ pub fn nvd(v: &Value) -> Result<Vec<UnifiedAdvisory>, String> {
 }
 
 pub fn kev(v: &Value) -> Result<Vec<UnifiedAdvisory>, String> {
-    let rows = v.get("vulnerabilities").and_then(Value::as_array).ok_or("KEV: expected vulnerabilities")?;
+    let rows = v
+        .get("vulnerabilities")
+        .and_then(Value::as_array)
+        .ok_or("KEV: expected vulnerabilities")?;
     rows.iter()
         .map(|row| {
             let id = field(row, "cveID").ok_or("Missing CVE ID")?;
@@ -126,18 +135,21 @@ pub fn consolidate(records: impl IntoIterator<Item = UnifiedAdvisory>) -> Vec<Un
     let mut grouped: BTreeMap<String, UnifiedAdvisory> = BTreeMap::new();
     for mut record in records {
         let key = record.id.clone();
-        let item = grouped.entry(key.clone()).or_insert_with(|| UnifiedAdvisory {
-            id: key,
-            aliases: Vec::new(),
-            evidence: Vec::new(),
-        });
+        let item = grouped
+            .entry(key.clone())
+            .or_insert_with(|| UnifiedAdvisory {
+                id: key,
+                aliases: Vec::new(),
+                evidence: Vec::new(),
+            });
         item.aliases.append(&mut record.aliases);
         item.evidence.append(&mut record.evidence);
     }
     for item in grouped.values_mut() {
         item.aliases.sort();
         item.aliases.dedup();
-        item.evidence.sort_by(|a, b| a.source.cmp(&b.source).then(a.source_id.cmp(&b.source_id)));
+        item.evidence
+            .sort_by(|a, b| a.source.cmp(&b.source).then(a.source_id.cmp(&b.source_id)));
         item.evidence.dedup();
     }
     grouped.into_values().collect()
