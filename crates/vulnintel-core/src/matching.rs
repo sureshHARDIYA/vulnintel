@@ -23,11 +23,21 @@ pub struct MatchEvidence {
 
 /// Call only with a validated successful response from OSV's /v1/query.
 /// Empty results mean no known OSV match, not proof that the software is safe.
-pub fn match_osv_response(ecosystem: &str, package: &str, version: &str, response: &Value) -> MatchEvidence {
+pub fn match_osv_response(
+    ecosystem: &str,
+    package: &str,
+    version: &str,
+    response: &Value,
+) -> MatchEvidence {
     let vulns = response.get("vulns").and_then(Value::as_array);
-    let ids = vulns.map(|entries| {
-        entries.iter().filter_map(|v| v.get("id").and_then(Value::as_str).map(str::to_owned)).collect::<Vec<_>>()
-    }).unwrap_or_default();
+    let ids = vulns
+        .map(|entries| {
+            entries
+                .iter()
+                .filter_map(|v| v.get("id").and_then(Value::as_str).map(str::to_owned))
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
     let status = match vulns {
         None => Exposure::Unknown,
         Some(entries) if entries.is_empty() => Exposure::Unaffected,
@@ -50,7 +60,12 @@ mod tests {
     use serde_json::json;
     #[test]
     fn known_match() {
-        let result = match_osv_response("npm", "lodash", "4.17.20", &json!({"vulns":[{"id":"GHSA-test"}]}));
+        let result = match_osv_response(
+            "npm",
+            "lodash",
+            "4.17.20",
+            &json!({"vulns":[{"id":"GHSA-test"}]}),
+        );
         assert_eq!(result.status, Exposure::Affected);
     }
     #[test]
