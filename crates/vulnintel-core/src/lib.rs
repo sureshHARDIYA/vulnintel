@@ -1,3 +1,4 @@
+pub mod enrichment;
 pub mod matching;
 pub mod normalization;
 pub mod sbom;
