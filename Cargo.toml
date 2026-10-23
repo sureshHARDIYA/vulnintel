@@ -1,3 +1,3 @@
 [workspace]
-members = ["crates/vulnintel-core", "crates/vulnintel-sources", "crates/vulnintel-cli", "crates/vulnintel-standards"]
+members = ["crates/vulnintel-core", "crates/vulnintel-sources", "crates/vulnintel-cli", "crates/vulnintel-standards", "crates/vulnintel-sync"]
 resolver = "2"
