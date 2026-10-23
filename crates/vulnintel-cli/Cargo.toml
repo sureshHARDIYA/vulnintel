@@ -3,8 +3,10 @@ name = "vulnintel-cli"
 version = "0.1.0"
 edition = "2021"
 license = "MIT"
-description = "Offline VulnIntel JSON processing CLI"
+description = "VulnIntel JSON processing and official feed query CLI"
 repository = "https://github.com/sureshHARDIYA/vulnintel"
+
 [dependencies]
 vulnintel-core = { path = "../vulnintel-core", version = "0.1.0" }
+vulnintel-sources = { path = "../vulnintel-sources", version = "0.1.0" }
 serde_json = "1"
