@@ -3,6 +3,7 @@
 
 pub mod enrichment;
 pub mod ingestion;
+pub mod windows;
 use rusqlite::{params, Connection, OptionalExtension, Transaction};
 use serde_json::Value;
 use std::path::Path;
@@ -41,7 +42,7 @@ impl Store {
                 completed_through TEXT NOT NULL,
                 updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
              );
-             CREATE TABLE IF NOT EXISTS checkpoints (
+             CREATE TABLE IF NOT EXISTS active_windows (\n                provider TEXT PRIMARY KEY,\n                window_start TEXT NOT NULL,\n                window_end TEXT NOT NULL,\n                next_cursor INTEGER NOT NULL CHECK (next_cursor >= 1),\n                updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))\n             );\n             CREATE TABLE IF NOT EXISTS checkpoints (
                 provider TEXT PRIMARY KEY,
                 page INTEGER NOT NULL CHECK (page >= 1),
                 updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
