@@ -18,13 +18,13 @@ table{width:100%;border-collapse:collapse;text-align:left}th,td{border-bottom:1p
 <p>Browse a daily snapshot of public vulnerability advisories, then use the Rust toolkit to query official sources and evaluate package/version evidence. Records shown here are public intelligence—not proof that any application is affected.</p></div>
 <section id="explorer"><h2>Public advisory explorer</h2><p id="status" aria-live="polite">Loading daily advisory snapshot…</p>
 <div class="controls"><input id="search" type="search" placeholder="Search CVE, summary…" aria-label="Search advisories">
-<select id="source" aria-label="Filter by source"><option value="">All sources</option><option>GitHub Advisories</option><option>CISA KEV</option></select>
+<select id="source" aria-label="Filter by source"><option value="">All sources</option><option>GitHub Advisories</option><option>CISA KEV</option><option>NVD</option></select>
 <select id="limit" aria-label="Maximum rows"><option>25</option><option>50</option><option>100</option><option>250</option></select></div>
 <div class="scroll"><table><thead><tr><th>Identifier</th><th>Source</th><th>Severity / status</th><th>Published / added</th><th>Description</th></tr></thead><tbody id="rows"></tbody></table></div></section>
 <section id="quickstart"><h2>Quick start</h2><p>Install Rust and clone the repository. Query a specific package/version using the CLI:</p>
 <pre><code>cargo run -p vulnintel-cli -- match npm lodash 4.17.20</code></pre>
 <p>View the <a href="https://github.com/sureshHARDIYA/vulnintel#readme">README</a> for installation, configuration and library usage.</p></section>
-<footer><small>Data: public GitHub advisories and CISA KEV. Not comprehensive; always consult original advisories and confirm actual installed versions. No tracking or analytics.</small></footer></main>
+<footer><small>Data: public GitHub advisories, CISA KEV and NVD (when available). OSV requires package/version queries; FIRST EPSS provides scores, not standalone advisories. This is a sample snapshot, not comprehensive coverage. Always confirm installed versions. No tracking or analytics.</small></footer></main>
 <script>
 let records=[];
 const search=document.querySelector('#search'), source=document.querySelector('#source'), limit=document.querySelector('#limit'), rows=document.querySelector('#rows');
@@ -43,7 +43,9 @@ function render(){
 }
 for(const el of [search,source,limit])el.addEventListener('input',render);
 fetch('./advisories.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('No snapshot');return r.json()}).then(data=>{
-  records=Array.isArray(data.records)?data.records:[];render();
+  records=Array.isArray(data.records)?data.records:[];
+  for(const option of [...source.options]){if(option.value && !records.some(r=>r.source===option.value)){option.disabled=true;option.textContent+= " (unavailable)";}}
+  render();
   document.querySelector('#status').textContent+= ' Updated '+new Date(data.generated_at).toLocaleString()+'.';
 }).catch(()=>{document.querySelector('#status').textContent='Snapshot not available yet. Deploy the Pages workflow to generate data.'});
 </script></body></html>
