@@ -61,10 +61,8 @@ pub fn parse(value: &Value) -> Result<Vec<Component>, String> {
                                 purl = locator.map(str::to_owned);
                             }
                         }
-                        "cpe23Type" | "cpe22Type" => {
-                            if cpe.is_none() {
-                                cpe = locator.map(str::to_owned);
-                            }
+                        "cpe23Type" | "cpe22Type" if cpe.is_none() => {
+                            cpe = locator.map(str::to_owned);
                         }
                         _ => {}
                     }
