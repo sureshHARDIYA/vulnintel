@@ -1,0 +1,26 @@
+name: Release (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish (must match Cargo.toml)"
+        required: true
+permissions:
+  contents: read
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: crates-io
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo test --workspace
+      - name: Verify version
+        env:
+          EXPECTED: ${{ inputs.version }}
+        run: |
+          grep -q '^version = "'"$EXPECTED"'"$' crates/vulnintel-core/Cargo.toml
+      - name: Publish core crate
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish -p vulnintel-core
