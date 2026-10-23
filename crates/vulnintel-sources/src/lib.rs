@@ -41,12 +41,19 @@ pub fn github_advisories(client: &Client, page: u32, per_page: u8) -> FeedResult
     request(|| {
         client
             .get(GITHUB_ADVISORIES_API)
-            .query(&[("page", page.to_string()), ("per_page", per_page.to_string())])
+            .query(&[
+                ("page", page.to_string()),
+                ("per_page", per_page.to_string()),
+            ])
             .header("Accept", "application/vnd.github+json")
     })
 }
 
-pub fn nvd_recent(client: &Client, results_per_page: u16, api_key: Option<&str>) -> FeedResult<Value> {
+pub fn nvd_recent(
+    client: &Client,
+    results_per_page: u16,
+    api_key: Option<&str>,
+) -> FeedResult<Value> {
     let count = results_per_page.clamp(1, 2000);
     request(|| {
         let req = client.get(NVD_API).query(&[("resultsPerPage", count)]);
@@ -69,7 +76,12 @@ pub fn epss(client: &Client, cve: &str) -> FeedResult<Value> {
     request(|| client.get(FIRST_EPSS_API).query(&[("cve", cve)]))
 }
 
-pub fn osv_package(client: &Client, ecosystem: &str, package: &str, version: &str) -> FeedResult<Value> {
+pub fn osv_package(
+    client: &Client,
+    ecosystem: &str,
+    package: &str,
+    version: &str,
+) -> FeedResult<Value> {
     if ecosystem.is_empty() || package.is_empty() || version.is_empty() {
         return Err("Ecosystem, package and version are required".into());
     }
