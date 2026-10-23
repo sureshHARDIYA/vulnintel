@@ -27,6 +27,15 @@ impl Store {
                 observed_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
                 PRIMARY KEY(provider, record_id)
              );
+             CREATE TABLE IF NOT EXISTS record_observations (
+                observation_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                provider TEXT NOT NULL,
+                record_id TEXT NOT NULL,
+                payload TEXT NOT NULL,
+                observed_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+             );
+             CREATE INDEX IF NOT EXISTS idx_record_observations_lookup
+                ON record_observations(provider, record_id, observation_id);
              CREATE TABLE IF NOT EXISTS sync_windows (
                 provider TEXT PRIMARY KEY,
                 completed_through TEXT NOT NULL,
@@ -104,6 +113,10 @@ impl Store {
                 return Err("Record ID cannot be empty".into());
             }
             tx.execute(
+                "INSERT INTO record_observations(provider, record_id, payload) VALUES (?1, ?2, ?3)",
+                params![provider, id, serde_json::to_string(payload)?],
+            )?;
+            tx.execute(
                 "INSERT INTO records(provider, record_id, payload) VALUES (?1, ?2, ?3)
                  ON CONFLICT(provider, record_id) DO UPDATE SET
                     payload = excluded.payload,
@@ -120,6 +133,15 @@ impl Store {
         )?;
         tx.commit()?;
         Ok(())
+    }
+
+    /// Number of committed source observations, including repeated and changed records.
+    pub fn observation_count(&self, provider: &str) -> SyncResult<u64> {
+        Ok(self.conn.query_row(
+            "SELECT COUNT(*) FROM record_observations WHERE provider = ?1",
+            [provider],
+            |row| row.get(0),
+        )?)
     }
 
     pub fn count(&self, provider: &str) -> SyncResult<u64> {
@@ -169,6 +191,10 @@ fn persist(
             return Err("Record ID cannot be empty".into());
         }
         tx.execute(
+            "INSERT INTO record_observations(provider, record_id, payload) VALUES (?1, ?2, ?3)",
+            params![provider, id, serde_json::to_string(payload)?],
+        )?;
+        tx.execute(
             "INSERT INTO records (provider, record_id, payload) VALUES (?1, ?2, ?3)
              ON CONFLICT(provider, record_id) DO UPDATE SET
                 payload = excluded.payload,
@@ -213,6 +239,29 @@ mod tests {
         assert!(store
             .finish_window("nvd", &records, "2026-10-22T00:00:00Z")
             .is_err());
+    }
+
+    #[test]
+    fn preserves_repeated_observations_and_rolls_back_invalid_pages() {
+        let mut store = Store::open(":memory:").unwrap();
+        let id = "CVE-2026-1234".to_owned();
+        store
+            .save_page("nvd", &[(id.clone(), json!({"status":"new"}))], 2)
+            .unwrap();
+        store
+            .save_page("nvd", &[(id.clone(), json!({"status":"modified"}))], 3)
+            .unwrap();
+        assert_eq!(store.count("nvd").unwrap(), 1);
+        assert_eq!(store.observation_count("nvd").unwrap(), 2);
+        assert_eq!(
+            store.read("nvd", &id).unwrap().unwrap()["status"],
+            "modified"
+        );
+        assert!(store
+            .save_page("nvd", &[(id, json!({})), ("".into(), json!({}))], 4)
+            .is_err());
+        assert_eq!(store.observation_count("nvd").unwrap(), 2);
+        assert_eq!(store.page("nvd").unwrap(), 3);
     }
 
     #[test]
