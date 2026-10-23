@@ -26,6 +26,11 @@ impl Store {
                 observed_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
                 PRIMARY KEY(provider, record_id)
              );
+             CREATE TABLE IF NOT EXISTS sync_windows (
+                provider TEXT PRIMARY KEY,
+                completed_through TEXT NOT NULL,
+                updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+             );
              CREATE TABLE IF NOT EXISTS checkpoints (
                 provider TEXT PRIMARY KEY,
                 page INTEGER NOT NULL CHECK (page >= 1),
@@ -64,6 +69,58 @@ impl Store {
         Ok(())
     }
 
+    /// Latest fully committed UTC window end, or None for an initial backfill.
+    pub fn completed_through(&self, provider: &str) -> SyncResult<Option<String>> {
+        Ok(self
+            .conn
+            .query_row(
+                "SELECT completed_through FROM sync_windows WHERE provider = ?1",
+                [provider],
+                |row| row.get(0),
+            )
+            .optional()?)
+    }
+
+    /// Atomically commit a completed incremental window and all its validated records.
+    /// Incomplete windows must never advance this watermark.
+    pub fn finish_window(
+        &mut self,
+        provider: &str,
+        records: &[(String, Value)],
+        completed_through: &str,
+    ) -> SyncResult<()> {
+        if provider.is_empty() || !valid_utc_timestamp(completed_through) {
+            return Err("Provider and RFC3339 UTC timestamp required".into());
+        }
+        if let Some(previous) = self.completed_through(provider)? {
+            if completed_through < previous.as_str() {
+                return Err("Window watermark cannot move backwards".into());
+            }
+        }
+        let tx = self.conn.transaction()?;
+        for (id, payload) in records {
+            if id.is_empty() {
+                return Err("Record ID cannot be empty".into());
+            }
+            tx.execute(
+                "INSERT INTO records(provider, record_id, payload) VALUES (?1, ?2, ?3)
+                 ON CONFLICT(provider, record_id) DO UPDATE SET
+                    payload = excluded.payload,
+                    observed_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')",
+                params![provider, id, serde_json::to_string(payload)?],
+            )?;
+        }
+        tx.execute(
+            "INSERT INTO sync_windows(provider, completed_through) VALUES (?1, ?2)
+             ON CONFLICT(provider) DO UPDATE SET
+                completed_through = excluded.completed_through,
+                updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')",
+            params![provider, completed_through],
+        )?;
+        tx.commit()?;
+        Ok(())
+    }
+
     pub fn count(&self, provider: &str) -> SyncResult<u64> {
         Ok(self.conn.query_row(
             "SELECT COUNT(*) FROM records WHERE provider = ?1",
@@ -84,6 +141,19 @@ impl Store {
         raw.map(|text| serde_json::from_str(&text).map_err(Into::into))
             .transpose()
     }
+}
+
+fn valid_utc_timestamp(value: &str) -> bool {
+    value.len() == 20
+        && value.ends_with('Z')
+        && value.as_bytes()[4] == b'-'
+        && value.as_bytes()[7] == b'-'
+        && value.as_bytes()[10] == b'T'
+        && value.as_bytes()[13] == b':'
+        && value.as_bytes()[16] == b':'
+        && value.bytes().enumerate().all(|(i, b)| {
+            matches!(i, 4 | 7 | 10 | 13 | 16 | 19) || b.is_ascii_digit()
+        })
 }
 
 fn persist(
@@ -118,6 +188,30 @@ fn persist(
 mod tests {
     use super::*;
     use serde_json::json;
+
+    #[test]
+    fn window_watermark_commits_atomically() {
+        let mut store = Store::open(":memory:").unwrap();
+        let records = vec![("CVE-2026-1234".into(), json!({"id":"CVE-2026-1234"}))];
+        store
+            .finish_window("nvd", &records, "2026-10-23T00:00:00Z")
+            .unwrap();
+        assert_eq!(
+            store.completed_through("nvd").unwrap().as_deref(),
+            Some("2026-10-23T00:00:00Z")
+        );
+        let invalid = vec![("".into(), json!({}))];
+        assert!(store
+            .finish_window("nvd", &invalid, "2026-10-24T00:00:00Z")
+            .is_err());
+        assert_eq!(
+            store.completed_through("nvd").unwrap().as_deref(),
+            Some("2026-10-23T00:00:00Z")
+        );
+        assert!(store
+            .finish_window("nvd", &records, "2026-10-22T00:00:00Z")
+            .is_err());
+    }
 
     #[test]
     fn idempotent_storage_and_resume() {
