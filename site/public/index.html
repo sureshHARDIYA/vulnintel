@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VulnIntel — Public Advisory Explorer</title>
+<meta name="description" content="Open-source vulnerability intelligence documentation and public advisory snapshots.">
+<style>
+:root{font-family:system-ui,-apple-system,sans-serif;color-scheme:dark;background:#0b1220;color:#e6edf8}
+*{box-sizing:border-box}body{margin:0}a{color:#7bb6ff}header,main,footer{max-width:1120px;margin:auto;padding:24px}
+header{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+h1{font-size:clamp(2rem,5vw,3.2rem);margin:.2em 0}p{color:#bac7d9;line-height:1.6}.intro{padding:18px 0 24px}
+nav{display:flex;gap:18px;flex-wrap:wrap}.pill{border:1px solid #34445d;border-radius:99px;padding:5px 10px;color:#a8c8ee;font-size:.85rem}
+section{background:#111d31;border:1px solid #2d3b54;border-radius:16px;padding:20px;margin:18px 0}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}input,select{background:#0b1220;color:inherit;border:1px solid #526079;border-radius:8px;padding:11px;min-width:170px}
+table{width:100%;border-collapse:collapse;text-align:left}th,td{border-bottom:1px solid #2b3951;padding:11px 8px;vertical-align:top}th{color:#b9c8dd}
+.scroll{overflow:auto}small,.muted{color:#9baec6}.description{max-width:560px}code{background:#253550;padding:2px 5px;border-radius:4px}
+</style></head><body>
+<header><strong>◆ VulnIntel</strong><nav><a href="#explorer">Advisory explorer</a><a href="#quickstart">Quick start</a><a href="https://github.com/sureshHARDIYA/vulnintel">GitHub</a></nav></header>
+<main><div class="intro"><span class="pill">Free, open-source vulnerability intelligence</span><h1>Know what is reported.<br>Understand what it means.</h1>
+<p>Browse a daily snapshot of public vulnerability advisories, then use the Rust toolkit to query official sources and evaluate package/version evidence. Records shown here are public intelligence—not proof that any application is affected.</p></div>
+<section id="explorer"><h2>Public advisory explorer</h2><p id="status" aria-live="polite">Loading daily advisory snapshot…</p>
+<div class="controls"><input id="search" type="search" placeholder="Search CVE, summary…" aria-label="Search advisories">
+<select id="source" aria-label="Filter by source"><option value="">All sources</option><option>GitHub Advisories</option><option>CISA KEV</option></select>
+<select id="limit" aria-label="Maximum rows"><option>25</option><option>50</option><option>100</option><option>250</option></select></div>
+<div class="scroll"><table><thead><tr><th>Identifier</th><th>Source</th><th>Severity / status</th><th>Published / added</th><th>Description</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+<section id="quickstart"><h2>Quick start</h2><p>Install Rust and clone the repository. Query a specific package/version using the CLI:</p>
+<pre><code>cargo run -p vulnintel-cli -- match npm lodash 4.17.20</code></pre>
+<p>View the <a href="https://github.com/sureshHARDIYA/vulnintel#readme">README</a> for installation, configuration and library usage.</p></section>
+<footer><small>Data: public GitHub advisories and CISA KEV. Not comprehensive; always consult original advisories and confirm actual installed versions. No tracking or analytics.</small></footer></main>
+<script>
+let records=[];
+const search=document.querySelector('#search'), source=document.querySelector('#source'), limit=document.querySelector('#limit'), rows=document.querySelector('#rows');
+function render(){
+  const q=search.value.trim().toLowerCase(),s=source.value;
+  const filtered=records.filter(r=>(!s||r.source===s)&&(!q||[r.id,r.cve,r.summary].some(v=>String(v||'').toLowerCase().includes(q))));
+  rows.replaceChildren();
+  for(const r of filtered.slice(0,Number(limit.value))){
+    const tr=document.createElement('tr');
+    const id=document.createElement('a');id.textContent=r.id||'Unknown'; if(typeof r.url==='string'&&r.url.startsWith('https://')){id.href=r.url;id.rel='noopener noreferrer';id.target='_blank'}
+    const first=document.createElement('td');first.append(id);tr.append(first);
+    for(const value of [r.source,r.severity||'Unrated',String(r.published||'').slice(0,10),r.summary||'No summary']){const td=document.createElement('td');td.textContent=value;tr.append(td)}
+    rows.append(tr);
+  }
+  document.querySelector('#status').textContent=filtered.length+' matching advisories ('+records.length+' records in latest snapshot).';
+}
+for(const el of [search,source,limit])el.addEventListener('input',render);
+fetch('./advisories.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('No snapshot');return r.json()}).then(data=>{
+  records=Array.isArray(data.records)?data.records:[];render();
+  document.querySelector('#status').textContent+= ' Updated '+new Date(data.generated_at).toLocaleString()+'.';
+}).catch(()=>{document.querySelector('#status').textContent='Snapshot not available yet. Deploy the Pages workflow to generate data.'});
+</script></body></html>
