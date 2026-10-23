@@ -27,7 +27,16 @@ impl Store {
                 observed_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
                 PRIMARY KEY(provider, record_id)
              );
-             CREATE TABLE IF NOT EXISTS record_observations (\n                observation_id INTEGER PRIMARY KEY AUTOINCREMENT,\n                provider TEXT NOT NULL,\n                record_id TEXT NOT NULL,\n                payload TEXT NOT NULL,\n                observed_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))\n             );\n             CREATE INDEX IF NOT EXISTS idx_record_observations_lookup\n                ON record_observations(provider, record_id, observation_id);\n             CREATE TABLE IF NOT EXISTS sync_windows (
+             CREATE TABLE IF NOT EXISTS record_observations (
+                observation_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                provider TEXT NOT NULL,
+                record_id TEXT NOT NULL,
+                payload TEXT NOT NULL,
+                observed_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+             );
+             CREATE INDEX IF NOT EXISTS idx_record_observations_lookup
+                ON record_observations(provider, record_id, observation_id);
+             CREATE TABLE IF NOT EXISTS sync_windows (
                 provider TEXT PRIMARY KEY,
                 completed_through TEXT NOT NULL,
                 updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
@@ -103,7 +112,12 @@ impl Store {
             if id.is_empty() {
                 return Err("Record ID cannot be empty".into());
             }
-            tx.execute(\n                "INSERT INTO record_observations(provider, record_id, payload) VALUES (?1, ?2, ?3)",\n                params![provider, id, serde_json::to_string(payload)?],\n            )?;\n            tx.execute(\n                "INSERT INTO records(provider, record_id, payload) VALUES (?1, ?2, ?3)
+            tx.execute(
+                "INSERT INTO record_observations(provider, record_id, payload) VALUES (?1, ?2, ?3)",
+                params![provider, id, serde_json::to_string(payload)?],
+            )?;
+            tx.execute(
+                "INSERT INTO records(provider, record_id, payload) VALUES (?1, ?2, ?3)
                  ON CONFLICT(provider, record_id) DO UPDATE SET
                     payload = excluded.payload,
                     observed_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')",
@@ -121,7 +135,16 @@ impl Store {
         Ok(())
     }
 
-    /// Number of committed source observations, including repeated and changed records.\n    pub fn observation_count(&self, provider: &str) -> SyncResult<u64> {\n        Ok(self.conn.query_row(\n            "SELECT COUNT(*) FROM record_observations WHERE provider = ?1",\n            [provider],\n            |row| row.get(0),\n        )?)\n    }\n\n    pub fn count(&self, provider: &str) -> SyncResult<u64> {
+    /// Number of committed source observations, including repeated and changed records.
+    pub fn observation_count(&self, provider: &str) -> SyncResult<u64> {
+        Ok(self.conn.query_row(
+            "SELECT COUNT(*) FROM record_observations WHERE provider = ?1",
+            [provider],
+            |row| row.get(0),
+        )?)
+    }
+
+    pub fn count(&self, provider: &str) -> SyncResult<u64> {
         Ok(self.conn.query_row(
             "SELECT COUNT(*) FROM records WHERE provider = ?1",
             [provider],
@@ -167,7 +190,12 @@ fn persist(
         if id.is_empty() {
             return Err("Record ID cannot be empty".into());
         }
-        tx.execute(\n            "INSERT INTO record_observations(provider, record_id, payload) VALUES (?1, ?2, ?3)",\n            params![provider, id, serde_json::to_string(payload)?],\n        )?;\n        tx.execute(\n            "INSERT INTO records (provider, record_id, payload) VALUES (?1, ?2, ?3)
+        tx.execute(
+            "INSERT INTO record_observations(provider, record_id, payload) VALUES (?1, ?2, ?3)",
+            params![provider, id, serde_json::to_string(payload)?],
+        )?;
+        tx.execute(
+            "INSERT INTO records (provider, record_id, payload) VALUES (?1, ?2, ?3)
              ON CONFLICT(provider, record_id) DO UPDATE SET
                 payload = excluded.payload,
                 observed_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')",
