@@ -1,26 +1,59 @@
-name: Release (manual)
+name: Publish to crates.io
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: "Version to publish (must match Cargo.toml)"
-        required: true
+  release:
+    types: [published]
+
 permissions:
   contents: read
+
 jobs:
   publish:
+    # Only full stable releases; prereleases and drafts must not publish.
+    if: ${{ !github.event.release.prerelease && !github.event.release.draft }}
     runs-on: ubuntu-latest
     environment: crates-io
     steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - run: cargo test --workspace
-      - name: Verify version
+      - name: Checkout released tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          persist-credentials: false
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Verify release tag and crate version
         env:
-          EXPECTED: ${{ inputs.version }}
+          TAG: ${{ github.event.release.tag_name }}
+        shell: bash
         run: |
-          grep -q '^version = "'"$EXPECTED"'"$' crates/vulnintel-core/Cargo.toml
+          set -euo pipefail
+          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "Expected stable tag vMAJOR.MINOR.PATCH"; exit 1; }
+          VERSION="${TAG#v}"
+          grep -Fqx "version = \"$VERSION\"" crates/vulnintel-core/Cargo.toml || {
+            echo "Release tag $TAG does not match vulnintel-core Cargo.toml version"
+            exit 1
+          }
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      - name: Run Clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+      - name: Run tests
+        run: cargo test --workspace
+
+      - name: Dry-run package
+        run: cargo publish -p vulnintel-core --dry-run
+
       - name: Publish core crate
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
-        run: cargo publish -p vulnintel-core
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CARGO_REGISTRY_TOKEN" || { echo "CARGO_REGISTRY_TOKEN secret is missing"; exit 1; }
+          cargo publish -p vulnintel-core
