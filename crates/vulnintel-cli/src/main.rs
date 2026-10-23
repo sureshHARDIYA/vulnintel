@@ -3,11 +3,29 @@ use std::{
     error::Error,
     io::{self, Read},
 };
-use vulnintel_core::{categorize, deduplicate, matching::match_osv_response, Advisory};
+use vulnintel_core::{
+    categorize, deduplicate, matching::match_osv_response, normalization, Advisory,
+};
 use vulnintel_sources as feeds;
 
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let args: Vec<String> = env::args().skip(1).collect();
+    if args.first().map(String::as_str) == Some("normalize") && args.len() == 2 {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input)?;
+        let payload: serde_json::Value = serde_json::from_str(&input)?;
+        let records = match args[1].as_str() {
+            "github" => normalization::github(&payload),
+            "nvd" => normalization::nvd(&payload),
+            "kev" => normalization::kev(&payload),
+            _ => return Err("Expected normalize github|nvd|kev".into()),
+        }?;
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&normalization::consolidate(records))?
+        );
+        return Ok(());
+    }
     if args.first().map(String::as_str) == Some("fetch") {
         let client = feeds::client()?;
         let data = match args.get(1).map(String::as_str) {
