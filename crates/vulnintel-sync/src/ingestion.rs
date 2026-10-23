@@ -34,20 +34,29 @@ fn parse_page(
 ) -> SyncResult<(Vec<(String, Value)>, u32, bool)> {
     match provider {
         Provider::Github => {
-            let items = data.as_array().ok_or("GitHub API response must be an array")?;
+            let items = data
+                .as_array()
+                .ok_or("GitHub API response must be an array")?;
             if items.len() > limit as usize {
                 return Err("GitHub page exceeds requested limit".into());
             }
             let mut records = Vec::with_capacity(items.len());
             for item in items {
-                let id = item.get("ghsa_id").and_then(Value::as_str).ok_or("Missing ghsa_id")?;
+                let id = item
+                    .get("ghsa_id")
+                    .and_then(Value::as_str)
+                    .ok_or("Missing ghsa_id")?;
                 if !id.starts_with("GHSA-") {
                     return Err("Invalid ghsa_id".into());
                 }
                 records.push((id.to_owned(), item.clone()));
             }
             let complete = items.len() < limit as usize;
-            let next = if complete { 1 } else { cursor.checked_add(1).ok_or("Page overflow")? };
+            let next = if complete {
+                1
+            } else {
+                cursor.checked_add(1).ok_or("Page overflow")?
+            };
             Ok((records, next, complete))
         }
         Provider::Nvd => {
@@ -85,7 +94,11 @@ fn parse_page(
                 return Err("NVD returned empty page before totalResults".into());
             }
             let complete = next_offset >= total;
-            let next = if complete { 1 } else { u32::try_from(next_offset)? };
+            let next = if complete {
+                1
+            } else {
+                u32::try_from(next_offset)?
+            };
             Ok((records, next, complete))
         }
     }
@@ -179,7 +192,9 @@ mod tests {
         assert_eq!(store.page("nvd").unwrap(), 2);
         let failed = run(&mut store, Provider::Nvd, 1, 1, |offset, _| {
             assert_eq!(offset, 1);
-            Ok(json!({"startIndex":1,"totalResults":2,"vulnerabilities":[{"cve":{"id":"invalid"}}]}))
+            Ok(
+                json!({"startIndex":1,"totalResults":2,"vulnerabilities":[{"cve":{"id":"invalid"}}]}),
+            )
         });
         assert!(failed.is_err());
         assert_eq!(store.page("nvd").unwrap(), 2);
