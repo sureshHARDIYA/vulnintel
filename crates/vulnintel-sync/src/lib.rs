@@ -1,3 +1,4 @@
+pub mod ingestion;
 //! Durable, transaction-based storage for public advisory snapshots and pagination state.
 //! A successful page commit atomically saves source records and the next page cursor.
 use rusqlite::{params, Connection, OptionalExtension, Transaction};
