@@ -2,6 +2,7 @@ pub mod enrichment;
 pub mod matching;
 pub mod normalization;
 pub mod sbom;
+pub mod sbom_matching;
 pub mod storage;
 
 use serde::{Deserialize, Serialize};
