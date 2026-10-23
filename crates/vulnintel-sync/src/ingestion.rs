@@ -28,12 +28,7 @@ pub struct SyncReport {
 
 type ParsedPage = (Vec<(String, Value)>, u32, bool);
 
-fn parse_page(
-    provider: Provider,
-    data: &Value,
-    cursor: u32,
-    limit: u32,
-) -> SyncResult<ParsedPage> {
+fn parse_page(provider: Provider, data: &Value, cursor: u32, limit: u32) -> SyncResult<ParsedPage> {
     match provider {
         Provider::Github => {
             let items = data
