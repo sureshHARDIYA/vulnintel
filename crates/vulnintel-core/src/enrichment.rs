@@ -66,7 +66,10 @@ pub fn parse_kev(feed: &Value, observed_at: &str) -> Result<BTreeMap<String, Kev
             id.to_owned(),
             KevEvidence {
                 date_added: required(row, "dateAdded")?.to_owned(),
-                due_date: row.get("dueDate").and_then(Value::as_str).map(str::to_owned),
+                due_date: row
+                    .get("dueDate")
+                    .and_then(Value::as_str)
+                    .map(str::to_owned),
                 catalog_version: version.clone(),
                 observed_at: observed_at.to_owned(),
             },
@@ -85,7 +88,10 @@ fn fraction(row: &Value, field: &str) -> Result<f64, String> {
 }
 
 /// EPSS is a probability estimate, not evidence of active exploitation.
-pub fn parse_epss(feed: &Value, observed_at: &str) -> Result<BTreeMap<String, EpssEvidence>, String> {
+pub fn parse_epss(
+    feed: &Value,
+    observed_at: &str,
+) -> Result<BTreeMap<String, EpssEvidence>, String> {
     if observed_at.is_empty() {
         return Err("Missing observation timestamp".into());
     }
@@ -145,9 +151,16 @@ mod tests {
             &json!({"data":[{"cve":"CVE-2026-12345","epss":"0.042","percentile":"0.81","date":"2026-10-22"}]}),
             "2026-10-23T08:05:00Z",
         ).unwrap();
-        let joined = join(vec!["CVE-2026-12345".into(), "CVE-2026-99999".into()], &kev, &epss);
+        let joined = join(
+            vec!["CVE-2026-12345".into(), "CVE-2026-99999".into()],
+            &kev,
+            &epss,
+        );
         assert_eq!(joined.len(), 2);
-        assert_eq!(joined[0].kev.as_ref().unwrap().catalog_version.as_deref(), Some("2026.10"));
+        assert_eq!(
+            joined[0].kev.as_ref().unwrap().catalog_version.as_deref(),
+            Some("2026.10")
+        );
         assert_eq!(joined[0].epss.as_ref().unwrap().probability, 0.042);
         assert!(joined[1].kev.is_none());
         assert!(joined[1].epss.is_none());
