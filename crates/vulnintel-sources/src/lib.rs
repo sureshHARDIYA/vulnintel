@@ -65,6 +65,27 @@ pub fn nvd_recent(
     })
 }
 
+/// Fetch an explicit NVD page. The caller owns the durable checkpoint.
+pub fn nvd_page(
+    client: &Client,
+    start_index: u32,
+    results_per_page: u16,
+    api_key: Option<&str>,
+) -> FeedResult<Value> {
+    let count = results_per_page.clamp(1, 2000);
+    request(|| {
+        let req = client.get(NVD_API).query(&[
+            ("startIndex", start_index.to_string()),
+            ("resultsPerPage", count.to_string()),
+        ]);
+        if let Some(key) = api_key {
+            req.header("apiKey", key)
+        } else {
+            req
+        }
+    })
+}
+
 pub fn cisa_kev(client: &Client) -> FeedResult<Value> {
     request(|| client.get(CISA_KEV_JSON))
 }
