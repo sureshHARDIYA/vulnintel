@@ -3,7 +3,7 @@ use std::{
     error::Error,
     io::{self, Read},
 };
-use vulnintel_core::{categorize, deduplicate, Advisory};
+use vulnintel_core::{categorize, deduplicate, matching::match_osv_response, Advisory};
 use vulnintel_sources as feeds;
 
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
@@ -23,8 +23,15 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         println!("{}", serde_json::to_string_pretty(&data)?);
         return Ok(());
     }
+    if args.first().map(String::as_str) == Some("match") && args.len() == 4 {
+        let client = feeds::client()?;
+        let response = feeds::osv_package(&client, &args[1], &args[2], &args[3])?;
+        let evidence = match_osv_response(&args[1], &args[2], &args[3], &response);
+        println!("{}", serde_json::to_string_pretty(&evidence)?);
+        return Ok(());
+    }
     if !args.is_empty() {
-        return Err("Usage: vulnintel-cli [fetch ...] (default: process advisory JSON on stdin)".into());
+        return Err("Usage: vulnintel-cli [fetch ... | match ECOSYSTEM PACKAGE VERSION] (default: process advisory JSON on stdin)".into());
     }
     let mut input = String::new();
     io::stdin().read_to_string(&mut input)?;
