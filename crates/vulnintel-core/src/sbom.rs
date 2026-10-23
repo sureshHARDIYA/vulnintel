@@ -22,7 +22,11 @@ pub enum MatchStatus {
 pub fn parse(value: &Value) -> Result<Vec<Component>, String> {
     let (items, spdx) = if value.get("bomFormat").and_then(Value::as_str) == Some("CycloneDX") {
         (value.get("components").and_then(Value::as_array), false)
-    } else if value.get("spdxVersion").and_then(Value::as_str).is_some_and(|s| s.starts_with("SPDX-2.")) {
+    } else if value
+        .get("spdxVersion")
+        .and_then(Value::as_str)
+        .is_some_and(|s| s.starts_with("SPDX-2."))
+    {
         (value.get("packages").and_then(Value::as_array), true)
     } else {
         return Err("Unsupported SBOM format".into());
@@ -30,31 +34,49 @@ pub fn parse(value: &Value) -> Result<Vec<Component>, String> {
     let items = items.ok_or("SBOM missing component or package array")?;
     let mut result = Vec::with_capacity(items.len());
     for item in items {
-        let name = item.get("name").and_then(Value::as_str).filter(|s| !s.is_empty())
+        let name = item
+            .get("name")
+            .and_then(Value::as_str)
+            .filter(|s| !s.is_empty())
             .ok_or("SBOM entry missing name")?;
         let version_key = if spdx { "versionInfo" } else { "version" };
-        let version = item.get(version_key).and_then(Value::as_str)
-            .filter(|s| !s.is_empty() && *s != "NOASSERTION").map(str::to_owned);
+        let version = item
+            .get(version_key)
+            .and_then(Value::as_str)
+            .filter(|s| !s.is_empty() && *s != "NOASSERTION")
+            .map(str::to_owned);
         let mut purl = item.get("purl").and_then(Value::as_str).map(str::to_owned);
         let mut cpe = item.get("cpe").and_then(Value::as_str).map(str::to_owned);
         if spdx {
             if let Some(refs) = item.get("externalRefs").and_then(Value::as_array) {
                 for reference in refs {
-                    let kind = reference.get("referenceType").and_then(Value::as_str).unwrap_or("");
+                    let kind = reference
+                        .get("referenceType")
+                        .and_then(Value::as_str)
+                        .unwrap_or("");
                     let locator = reference.get("referenceLocator").and_then(Value::as_str);
                     match kind {
                         "purl" => {
-                            if purl.is_none() { purl = locator.map(str::to_owned); }
+                            if purl.is_none() {
+                                purl = locator.map(str::to_owned);
+                            }
                         }
                         "cpe23Type" | "cpe22Type" => {
-                            if cpe.is_none() { cpe = locator.map(str::to_owned); }
+                            if cpe.is_none() {
+                                cpe = locator.map(str::to_owned);
+                            }
                         }
                         _ => {}
                     }
                 }
             }
         }
-        result.push(Component { name: name.to_owned(), version, purl, cpe });
+        result.push(Component {
+            name: name.to_owned(),
+            version,
+            purl,
+            cpe,
+        });
     }
     Ok(result)
 }
@@ -86,7 +108,10 @@ mod tests {
                 {"referenceType":"purl","referenceLocator":"pkg:pypi/library@2.0"}
             ]}
         ]});
-        assert_eq!(parse(&doc).unwrap()[0].purl.as_deref(), Some("pkg:pypi/library@2.0"));
+        assert_eq!(
+            parse(&doc).unwrap()[0].purl.as_deref(),
+            Some("pkg:pypi/library@2.0")
+        );
     }
 
     #[test]
