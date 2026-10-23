@@ -4,7 +4,7 @@
 
 It is suitable for software inventory tools, security operations dashboards, dependency-risk platforms, CI pipelines, internal developer portals, and vulnerability research workflows. The core is a Rust library; its CLI exchanges JSON so other languages can integrate without a dedicated service.
 
-> **Project status: early experimental foundation.** The current implementation processes supplied advisory JSON offline. It does **not yet fetch live vulnerability feeds**, calculate affected-version matches, scan projects, prove exploitability, or trigger AI investigations. Do not rely on it as a production vulnerability scanner.
+> **Project status: early experimental foundation.** The current implementation processes advisory JSON offline and includes first-stage live HTTP queries to official feeds, plus a package/version OSV query and an ASVS CSV parser. It does **not yet run full incremental synchronization**, normalize all upstream feeds, parse SBOMs, prove exploitability, or trigger AI investigations. Do not rely on it as a production vulnerability scanner.
 
 ## What it does today
 
@@ -12,6 +12,9 @@ It is suitable for software inventory tools, security operations dashboards, dep
 - Deduplicate records with the **same primary ID**, preserving and combining aliases and source URLs. Cross-source alias matching is **not yet implemented**.
 - Categorize advisories using multi-valued ecosystem and severity labels.
 - Process JSON through a Rust library or a command-line tool.
+- Query OSV, NVD, GitHub Advisories, CISA KEV and FIRST EPSS directly using the CLI (single requests, raw source JSON).
+- Query OSV for a specific ecosystem/package/version and produce basic match evidence.
+- Parse externally downloaded OWASP ASVS 5.0 CSV with `vulnintel-standards`.
 
 ### Intended processing pipeline
 
@@ -23,7 +26,7 @@ Official sources → Collect → Normalize → Deduplicate → Categorize → En
                      Evidence-based investigation (consumer-owned)
 ```
 
-Collection, normalization across sources, enrichment, version matching, and publishable feed storage are roadmap capabilities, not features of the current CLI.
+Automated incremental collection, cross-source normalization, durable synchronized feed storage and complete SBOM matching remain roadmap capabilities.
 
 ## Install and build
 
@@ -121,7 +124,7 @@ For Python, JavaScript, or other languages, invoke the CLI as a subprocess and e
 
 The current core and CLI require **no API keys, network access, database, or environment variables**. Provide a JSON array of advisories using the schema shown above. The current CLI always performs exact-primary-ID deduplication followed by ecosystem/severity categorization; it has no runtime configuration flags yet.
 
-The source crate documents planned official endpoints:
+The source crate implements first-stage, read-only HTTP requests against these official endpoints:
 
 | Source | Purpose | Endpoint |
 | --- | --- | --- |
@@ -131,7 +134,20 @@ The source crate documents planned official endpoints:
 | FIRST EPSS | Exploitation probability estimates | [EPSS API](https://www.first.org/epss/api) |
 | GitHub Advisories | Public security advisories | [GitHub REST API](https://docs.github.com/en/rest/security-advisories/global-advisories) |
 
-These are **documented integration targets**, not working collectors in the current Rust library. A separate GitHub Actions smoke test checks source availability.
+The source clients fetch upstream JSON, but are **not** yet a scheduled, paginated, normalized ingestion engine. A separate GitHub Actions smoke test checks source availability.
+
+## Live feed examples
+
+```bash
+cargo run -p vulnintel-cli -- fetch github
+cargo run -p vulnintel-cli -- fetch nvd
+cargo run -p vulnintel-cli -- fetch kev
+cargo run -p vulnintel-cli -- fetch epss CVE-2021-44228
+cargo run -p vulnintel-cli -- fetch osv npm lodash 4.17.20
+cargo run -p vulnintel-cli -- match npm lodash 4.17.20
+```
+
+NVD supports an optional `NVD_API_KEY` environment variable. Feed queries require internet access. See [source coverage and limitations](knowledge/source-coverage.md).
 
 ## Repository layout
 
