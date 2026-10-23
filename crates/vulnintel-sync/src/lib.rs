@@ -151,9 +151,10 @@ fn valid_utc_timestamp(value: &str) -> bool {
         && value.as_bytes()[10] == b'T'
         && value.as_bytes()[13] == b':'
         && value.as_bytes()[16] == b':'
-        && value.bytes().enumerate().all(|(i, b)| {
-            matches!(i, 4 | 7 | 10 | 13 | 16 | 19) || b.is_ascii_digit()
-        })
+        && value
+            .bytes()
+            .enumerate()
+            .all(|(i, b)| matches!(i, 4 | 7 | 10 | 13 | 16 | 19) || b.is_ascii_digit())
 }
 
 fn persist(
