@@ -61,10 +61,16 @@ mod tests {
             {"name":"opaque","version":"1.0"}
         ]});
         let components = sbom::parse(&doc).unwrap();
-        let affected = match_component(&components[0], Some(&json!({"vulns":[{"id":"GHSA-example"}]})));
+        let affected = match_component(
+            &components[0],
+            Some(&json!({"vulns":[{"id":"GHSA-example"}]})),
+        );
         assert_eq!(affected.status, Exposure::Affected);
         assert_eq!(affected.advisory_ids, vec!["GHSA-example"]);
-        assert_eq!(match_component(&components[1], None).status, Exposure::Unknown);
+        assert_eq!(
+            match_component(&components[1], None).status,
+            Exposure::Unknown
+        );
         assert_eq!(
             match_component(&components[0], Some(&json!({"vulns":[]}))).status,
             Exposure::NoKnownAdvisory
