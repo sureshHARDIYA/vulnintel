@@ -1,43 +1,28 @@
-# OWASP data integration
+# OWASP public security standards
 
-OWASP does **not** provide a single official "latest CVEs" feed. VulnIntel should obtain fresh advisories from OSV, NVD, GitHub Advisories and vendor sources; OWASP resources provide standards and application-security context.
+VulnIntel is a standalone vulnerability intelligence toolkit. It does **not** require a Dependency-Track server, URL, or API key.
 
-## Public OWASP ASVS data
+OWASP does not operate a general-purpose latest-CVE feed. Use OSV, NVD, GitHub Advisories, vendor advisories, CISA KEV, and FIRST EPSS for advisory and exploitation intelligence.
 
-OWASP ASVS 5.0.0 requirements are available as a version-pinned CSV:
+## OWASP ASVS
+
+OWASP ASVS provides publicly accessible security verification requirements. The version-pinned machine-readable CSV is:
 
 ```text
 https://raw.githubusercontent.com/OWASP/ASVS/v5.0.0/5.0/docs_en/OWASP_Application_Security_Verification_Standard_5.0.0_en.csv
 ```
 
-Try locally:
+Download a test sample:
 
 ```bash
-curl --fail --location --show-error \
-  https://raw.githubusercontent.com/OWASP/ASVS/v5.0.0/5.0/docs_en/OWASP_Application_Security_Verification_Standard_5.0.0_en.csv \
-  -o owasp-asvs-5.csv
-head -n 3 owasp-asvs-5.csv
+curl -fL https://raw.githubusercontent.com/OWASP/ASVS/v5.0.0/5.0/docs_en/OWASP_Application_Security_Verification_Standard_5.0.0_en.csv -o owasp-asvs.csv
+head -n 3 owasp-asvs.csv
 ```
 
-The data contains security verification requirements; it is **not** a vulnerability advisory feed. Mapping individual advisories to ASVS controls requires separate, reviewable logic.
+The GitHub Actions workflow `.github/workflows/owasp-feed-test.yml` validates the CSV structure and requires no credentials. It is a connectivity test, **not** an implemented Rust enrichment adapter.
 
-## OWASP Dependency-Track
+ASVS is a control catalog, not a vulnerability feed. Any future mappings between advisory findings and ASVS requirements must be evidence-backed and preserve the version of the standard.
 
-Dependency-Track is a separately deployed system with a REST API. Configure its base URL and an API key for integration tests:
+## Integration philosophy
 
-- GitHub Actions repository variable `DTRACK_URL`: e.g. `https://dependency-track.example.com` (HTTPS only).
-- GitHub Actions repository secret `DTRACK_API_KEY`: read-only API key authorized to query the instance.
-
-The workflow `.github/workflows/owasp-feed-test.yml` checks the public ASVS CSV and, when both values are configured, queries `GET /api/version` with `X-Api-Key`. That confirms API connectivity, **not** retrieval of project findings. If either value is absent, the Dependency-Track check is explicitly skipped.
-
-Run the workflow manually under GitHub Actions → **OWASP integration feed test** → **Run workflow**. It also runs weekly.
-
-For actual vulnerability ingestion, use the separate official-source feed smoke test `.github/workflows/feed-smoke.yml`. Avoid double counting Dependency-Track findings that originate from those same primary sources.
-
-## Future connector boundaries
-
-- `sources/`: authoritative advisories and exploitation metadata
-- `integrations/dependency_track/`: instance-specific projects, components, and findings
-- `enrichment/owasp/`: standards and mappings, with provenance and version pinning
-
-These are planned connector boundaries; the current Rust core does not yet implement them.
+The core library must remain self-contained, with no requirement for external application instances. Optional adapters for external products can be added separately if users need them; they must never become prerequisites for the core engine.
