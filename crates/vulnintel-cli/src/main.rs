@@ -3,7 +3,9 @@ use std::{
     error::Error,
     io::{self, Read},
 };
-use vulnintel_core::{categorize, deduplicate, matching::match_osv_response, normalization, Advisory};
+use vulnintel_core::{
+    categorize, deduplicate, matching::match_osv_response, normalization, Advisory,
+};
 use vulnintel_sources as feeds;
 
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
@@ -18,7 +20,10 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             "kev" => normalization::kev(&payload),
             _ => return Err("Expected normalize github|nvd|kev".into()),
         }?;
-        println!("{}", serde_json::to_string_pretty(&normalization::consolidate(records))?);
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&normalization::consolidate(records))?
+        );
         return Ok(());
     }
     if args.first().map(String::as_str) == Some("fetch") {
