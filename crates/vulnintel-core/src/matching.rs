@@ -7,7 +7,7 @@ use serde_json::Value;
 #[serde(rename_all = "snake_case")]
 pub enum Exposure {
     Affected,
-    Unaffected,
+    NoKnownAdvisory,
     Unknown,
 }
 
@@ -40,7 +40,7 @@ pub fn match_osv_response(
         .unwrap_or_default();
     let status = match vulns {
         None => Exposure::Unknown,
-        Some(entries) if entries.is_empty() => Exposure::Unaffected,
+        Some(entries) if entries.is_empty() => Exposure::NoKnownAdvisory,
         Some(_) if ids.is_empty() => Exposure::Unknown,
         Some(_) => Exposure::Affected,
     };
