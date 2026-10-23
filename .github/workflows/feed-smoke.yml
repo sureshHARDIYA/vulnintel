@@ -1,0 +1,35 @@
+name: Live feed smoke test
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 7 * * *"
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch official feeds and validate response
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, urllib.request
+          sources = {
+            "github": ("https://api.github.com/advisories?per_page=5", lambda x: isinstance(x, list) and len(x)>0),
+            "cisa_kev": ("https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json", lambda x: len(x.get("vulnerabilities", []))>0),
+            "epss": ("https://api.first.org/data/v1/epss?limit=5", lambda x: len(x.get("data", []))>0),
+            "nvd": ("https://services.nvd.nist.gov/rest/json/cves/2.0?resultsPerPage=1", lambda x: len(x.get("vulnerabilities", []))>0),
+          }
+          for name,(url,validate) in sources.items():
+            req=urllib.request.Request(url,headers={"User-Agent":"vulnintel-feed-smoke/0.1","Accept":"application/json"})
+            with urllib.request.urlopen(req,timeout=35) as response:
+              data=json.load(response)
+            if not validate(data): raise RuntimeError(f"{name}: empty or unexpected response")
+            print(f"{name}: OK")
+          # OSV is a package-version query API, not a global latest-advisories feed.
+          req=urllib.request.Request("https://api.osv.dev/v1/query",data=json.dumps({"package":{"name":"lodash","ecosystem":"npm"},"version":"4.17.20"}).encode(),headers={"Content-Type":"application/json","User-Agent":"vulnintel-feed-smoke/0.1"})
+          with urllib.request.urlopen(req,timeout=35) as response:
+            osv=json.load(response)
+          if not osv.get("vulns"): raise RuntimeError("osv: expected known vulnerable package matches")
+          print("osv: OK")
+          PY
