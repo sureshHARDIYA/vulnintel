@@ -1,5 +1,6 @@
 pub mod matching;
 pub mod normalization;
+pub mod sbom;
 pub mod storage;
 
 use serde::{Deserialize, Serialize};

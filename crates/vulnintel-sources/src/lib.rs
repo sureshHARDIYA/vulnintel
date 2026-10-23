@@ -86,6 +86,36 @@ pub fn nvd_page(
     })
 }
 
+/// Request a page from a bounded NVD last-modified window.
+/// Supply NVD-compatible RFC3339 timestamps, e.g. 2026-10-23T00:00:00.000Z.
+/// The caller must respect NVD's maximum window length and rate limits.
+pub fn nvd_modified_page(
+    client: &Client,
+    start: &str,
+    end: &str,
+    start_index: u32,
+    results_per_page: u16,
+    api_key: Option<&str>,
+) -> FeedResult<Value> {
+    if start >= end || !start.ends_with('Z') || !end.ends_with('Z') {
+        return Err("Expected ordered UTC last-modified window".into());
+    }
+    let count = results_per_page.clamp(1, 2000);
+    request(|| {
+        let req = client.get(NVD_API).query(&[
+            ("lastModStartDate", start.to_owned()),
+            ("lastModEndDate", end.to_owned()),
+            ("startIndex", start_index.to_string()),
+            ("resultsPerPage", count.to_string()),
+        ]);
+        if let Some(key) = api_key {
+            req.header("apiKey", key)
+        } else {
+            req
+        }
+    })
+}
+
 pub fn cisa_kev(client: &Client) -> FeedResult<Value> {
     request(|| client.get(CISA_KEV_JSON))
 }
