@@ -4,17 +4,19 @@
 
 It is suitable for software inventory tools, security operations dashboards, dependency-risk platforms, CI pipelines, internal developer portals, and vulnerability research workflows. The core is a Rust library; its CLI exchanges JSON so other languages can integrate without a dedicated service.
 
-> **Project status: early experimental foundation.** The current implementation processes advisory JSON offline and includes first-stage live HTTP queries to official feeds, plus a package/version OSV query and an ASVS CSV parser. It does **not yet run full incremental synchronization**, normalize all upstream feeds, parse SBOMs, prove exploitability, or trigger AI investigations. Do not rely on it as a production vulnerability scanner.
+> **Project status: v0.1.0 experimental preview (not production-ready).** The current implementation processes advisory JSON offline and includes first-stage live HTTP queries to official feeds, plus a package/version OSV query and an ASVS CSV parser. It does **not yet run complete scheduled incremental synchronization**, fully evaluate ecosystem-specific version ranges, prove exploitability, or trigger AI investigations. The workspace now includes foundational CycloneDX/SPDX inventory parsing, source-preserving KEV/EPSS enrichment, and SQLite persistence; these are not yet a fully integrated production service. Do not rely on it as a production vulnerability scanner.
 
 ## What it does today
 
 - Represent advisories with IDs, aliases, summaries, ecosystems, severity labels, and source URLs.
-- Deduplicate records with the **same primary ID**, preserving and combining aliases and source URLs. Cross-source alias matching is **not yet implemented**.
+- Deduplicate records with the **same primary ID**, preserving and combining aliases and source URLs. A separate normalization module conservatively consolidates explicitly verified CVE aliases; general alias resolution remains limited.
 - Categorize advisories using multi-valued ecosystem and severity labels.
 - Process JSON through a Rust library or a command-line tool.
 - Query OSV, NVD, GitHub Advisories, CISA KEV and FIRST EPSS directly using the CLI (single requests, raw source JSON).
 - Query OSV for a specific ecosystem/package/version and produce basic match evidence.
 - Parse externally downloaded OWASP ASVS 5.0 CSV with `vulnintel-standards`.
+- Parse basic CycloneDX JSON and SPDX JSON inventory entries, extract selected PURLs/CPE references, and produce conservative OSV query-match evidence.
+- Persist source records and checkpoints in SQLite and import/query typed CISA KEV and FIRST EPSS evidence with source observation timestamps.
 
 ### Intended processing pipeline
 
@@ -26,7 +28,7 @@ Official sources → Collect → Normalize → Deduplicate → Categorize → En
                      Evidence-based investigation (consumer-owned)
 ```
 
-Automated incremental collection, cross-source normalization, durable synchronized feed storage and complete SBOM matching remain roadmap capabilities.
+Complete scheduled incremental collection, robust rate-limit handling, comprehensive ecosystem-aware version matching, observability and historical provenance retention remain roadmap capabilities.
 
 ## Install and build
 
@@ -52,7 +54,7 @@ cargo install --path crates/vulnintel-cli
 vulnintel-cli < advisories.json
 ```
 
-**Registry publication:** Not yet confirmed. Until a release is published on crates.io, use a Git dependency or a local path dependency.
+**Registry publication:** Not yet confirmed. The initial GitHub prerelease does not publish any crates to crates.io. Until a release is published on crates.io, use a Git dependency or a local path dependency.
 
 ## Quick start
 
