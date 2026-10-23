@@ -26,7 +26,12 @@ pub struct SyncReport {
     pub complete: bool,
 }
 
-fn parse_page(provider: Provider, data: &Value, cursor: u32, limit: u32) -> SyncResult<(Vec<(String, Value)>, u32, bool)> {
+fn parse_page(
+    provider: Provider,
+    data: &Value,
+    cursor: u32,
+    limit: u32,
+) -> SyncResult<(Vec<(String, Value)>, u32, bool)> {
     match provider {
         Provider::Github => {
             let items = data.as_array().ok_or("GitHub API response must be an array")?;
@@ -46,22 +51,36 @@ fn parse_page(provider: Provider, data: &Value, cursor: u32, limit: u32) -> Sync
             Ok((records, next, complete))
         }
         Provider::Nvd => {
-            let items = data.get("vulnerabilities").and_then(Value::as_array).ok_or("NVD response missing vulnerabilities")?;
-            let total = data.get("totalResults").and_then(Value::as_u64).ok_or("NVD response missing totalResults")?;
-            let offset = data.get("startIndex").and_then(Value::as_u64).ok_or("NVD response missing startIndex")?;
+            let items = data
+                .get("vulnerabilities")
+                .and_then(Value::as_array)
+                .ok_or("NVD response missing vulnerabilities")?;
+            let total = data
+                .get("totalResults")
+                .and_then(Value::as_u64)
+                .ok_or("NVD response missing totalResults")?;
+            let offset = data
+                .get("startIndex")
+                .and_then(Value::as_u64)
+                .ok_or("NVD response missing startIndex")?;
             if offset != u64::from(cursor) || items.len() > limit as usize {
                 return Err("Unexpected NVD pagination response".into());
             }
             let mut records = Vec::with_capacity(items.len());
             for item in items {
                 let cve = item.get("cve").ok_or("NVD record missing cve")?;
-                let id = cve.get("id").and_then(Value::as_str).ok_or("NVD record missing id")?;
+                let id = cve
+                    .get("id")
+                    .and_then(Value::as_str)
+                    .ok_or("NVD record missing id")?;
                 if !vulnintel_sources::valid_cve(id) {
                     return Err("Invalid NVD CVE identifier".into());
                 }
                 records.push((id.to_owned(), item.clone()));
             }
-            let next_offset = offset.checked_add(items.len() as u64).ok_or("NVD offset overflow")?;
+            let next_offset = offset
+                .checked_add(items.len() as u64)
+                .ok_or("NVD offset overflow")?;
             if next_offset < total && items.is_empty() {
                 return Err("NVD returned empty page before totalResults".into());
             }
@@ -94,7 +113,11 @@ where
     let mut pages = 0;
     let mut complete = false;
     for _ in 0..max_pages {
-        let api_cursor = if provider == Provider::Nvd { cursor - 1 } else { cursor };
+        let api_cursor = if provider == Provider::Nvd {
+            cursor - 1
+        } else {
+            cursor
+        };
         let data = fetch(api_cursor, limit)?;
         let (records, next, finished) = parse_page(provider, &data, api_cursor, limit)?;
         let checkpoint = if provider == Provider::Nvd && !finished {
@@ -131,13 +154,15 @@ mod tests {
         let first = run(&mut store, Provider::Github, 1, 1, |page, _| {
             assert_eq!(page, 1);
             Ok(json!([{"ghsa_id":"GHSA-aaaa-bbbb-cccc"}]))
-        }).unwrap();
+        })
+        .unwrap();
         assert!(!first.complete);
         assert_eq!(store.page("github").unwrap(), 2);
         let second = run(&mut store, Provider::Github, 1, 2, |page, _| {
             assert_eq!(page, 2);
             Ok(json!([]))
-        }).unwrap();
+        })
+        .unwrap();
         assert!(second.complete);
         assert_eq!(store.page("github").unwrap(), 1);
         assert_eq!(store.count("github").unwrap(), 1);
@@ -149,7 +174,8 @@ mod tests {
         run(&mut store, Provider::Nvd, 1, 1, |offset, _| {
             assert_eq!(offset, 0);
             Ok(json!({"startIndex":0,"totalResults":2,"vulnerabilities":[{"cve":{"id":"CVE-2024-12345"}}]}))
-        }).unwrap();
+        })
+        .unwrap();
         assert_eq!(store.page("nvd").unwrap(), 2);
         let failed = run(&mut store, Provider::Nvd, 1, 1, |offset, _| {
             assert_eq!(offset, 1);
@@ -161,7 +187,8 @@ mod tests {
         let last = run(&mut store, Provider::Nvd, 1, 1, |offset, _| {
             assert_eq!(offset, 1);
             Ok(json!({"startIndex":1,"totalResults":2,"vulnerabilities":[{"cve":{"id":"CVE-2024-12346"}}]}))
-        }).unwrap();
+        })
+        .unwrap();
         assert!(last.complete);
         assert_eq!(store.count("nvd").unwrap(), 2);
     }
