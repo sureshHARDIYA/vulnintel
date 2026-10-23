@@ -1,3 +1,4 @@
+pub mod normalization;
 pub mod matching;
 pub mod storage;
 
