@@ -7,7 +7,13 @@ import urllib.request
 from pathlib import Path
 
 def fetch(url):
-    request = urllib.request.Request(url, headers={"User-Agent": "VulnIntel-feed", "Accept": "application/vnd.github+json"})
+    headers = {"User-Agent": "VulnIntel-feed", "Accept": "application/vnd.github+json"}
+    if url.startswith("https://api.github.com/"):
+        import os
+        token = os.environ.get("GITHUB_TOKEN")
+        if token:
+            headers["Authorization"] = "Bearer " + token
+    request = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(request, timeout=40) as response:
         return json.load(response)
 
