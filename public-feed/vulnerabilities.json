@@ -1,0 +1,1169 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-24T18:30:56.746939+00:00",
+  "sources": [
+    "GitHub Advisory Database",
+    "CISA KEV"
+  ],
+  "count": 100,
+  "advisories": [
+    {
+      "id": "CVE-2026-112937",
+      "aliases": [
+        "GHSA-jqc4-5cvw-7w85"
+      ],
+      "summary": "filelock: ReadWriteLock on the hard-link route deletes any directory another user renames onto its .filelock-* link directory name",
+      "severity": "medium",
+      "published": "2026-10-23T22:28:41Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-jqc4-5cvw-7w85"
+    },
+    {
+      "id": "CVE-2026-112913",
+      "aliases": [
+        "GHSA-9vhv-jxww-xfm5"
+      ],
+      "summary": "filelock: ReadWriteLock on Windows acts on SQLite side files another local user places beside its database",
+      "severity": "low",
+      "published": "2026-10-23T22:28:19Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-9vhv-jxww-xfm5"
+    },
+    {
+      "id": "CVE-2026-112907",
+      "aliases": [
+        "GHSA-567q-5qvw-pf92"
+      ],
+      "summary": "filelock: On Windows an oplock on a soft lock's marker holds SoftFileLock.acquire() past its timeout and blocks the stale break",
+      "severity": "low",
+      "published": "2026-10-23T22:27:32Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-567q-5qvw-pf92"
+    },
+    {
+      "id": "CVE-2026-113713",
+      "aliases": [
+        "GHSA-4f8h-vr72-p32c"
+      ],
+      "summary": "virtualenv: Temporary app-data can leave dangling seed package links",
+      "severity": "medium",
+      "published": "2026-10-23T22:26:57Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-4f8h-vr72-p32c"
+    },
+    {
+      "id": "CVE-2026-113717",
+      "aliases": [
+        "GHSA-cx28-75q4-x26q"
+      ],
+      "summary": "virtualenv: Pip seeding with download omits wheel digest verification",
+      "severity": "low",
+      "published": "2026-10-23T22:26:04Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-cx28-75q4-x26q"
+    },
+    {
+      "id": "CVE-2026-113714",
+      "aliases": [
+        "GHSA-494p-63j8-28p3"
+      ],
+      "summary": "virtualenv: Downloaded wheel selection and caching precede verification",
+      "severity": "low",
+      "published": "2026-10-23T22:25:22Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-494p-63j8-28p3"
+    },
+    {
+      "id": "CVE-2026-113718",
+      "aliases": [
+        "GHSA-394h-qwmc-48pf"
+      ],
+      "summary": "virtualenv: Xonsh activation literals depend on the script decoding codec",
+      "severity": "high",
+      "published": "2026-10-23T22:24:43Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-394h-qwmc-48pf"
+    },
+    {
+      "id": "CVE-2026-113720",
+      "aliases": [
+        "GHSA-fc2g-4w5p-6whm"
+      ],
+      "summary": "virtualenv: Seeded files retain permissions from an older cache",
+      "severity": "medium",
+      "published": "2026-10-23T22:23:11Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-fc2g-4w5p-6whm"
+    },
+    {
+      "id": "CVE-2026-113723",
+      "aliases": [
+        "GHSA-6w3r-xr62-4xcp"
+      ],
+      "summary": "virtualenv: Bash prompt values can change meaning under older compatibility modes",
+      "severity": "high",
+      "published": "2026-10-23T22:21:57Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-6w3r-xr62-4xcp"
+    },
+    {
+      "id": "CVE-2026-113715",
+      "aliases": [
+        "GHSA-qmx5-4p3x-wvqf"
+      ],
+      "summary": "virtualenv: Venv configuration readback can reinterpret path boundaries",
+      "severity": "low",
+      "published": "2026-10-23T22:20:43Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-qmx5-4p3x-wvqf"
+    },
+    {
+      "id": "CVE-2026-113719",
+      "aliases": [
+        "GHSA-hhxq-47xx-j5xx"
+      ],
+      "summary": "virtualenv: Seed replacement does not contain metadata deletion paths",
+      "severity": "medium",
+      "published": "2026-10-23T22:19:15Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-hhxq-47xx-j5xx"
+    },
+    {
+      "id": "CVE-2026-109461",
+      "aliases": [
+        "GHSA-xcx6-jx8p-x3h5"
+      ],
+      "summary": "MSAL Node authorization code flow may disclose parameters to an attacker-controlled endpoint",
+      "severity": "high",
+      "published": "2026-10-23T22:16:44Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-xcx6-jx8p-x3h5"
+    },
+    {
+      "id": "CVE-2026-109869",
+      "aliases": [
+        "GHSA-xjj6-f33q-929c"
+      ],
+      "summary": "undici vulnerable to Denial of Service via unhandled error on excessive content-encodings",
+      "severity": "high",
+      "published": "2026-10-23T22:14:31Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-xjj6-f33q-929c"
+    },
+    {
+      "id": "CVE-2026-109924",
+      "aliases": [
+        "GHSA-4qv8-2p9j-2685"
+      ],
+      "summary": "undici vulnerable to Denial of Service via unbounded memory in the EventSource parser",
+      "severity": "medium",
+      "published": "2026-10-23T22:13:29Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-4qv8-2p9j-2685"
+    },
+    {
+      "id": "CVE-2026-109841",
+      "aliases": [
+        "GHSA-f72v-6w45-q472"
+      ],
+      "summary": "undici vulnerable to Subresource Integrity bypass via non-lowercase algorithm tokens",
+      "severity": "medium",
+      "published": "2026-10-23T22:12:57Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-f72v-6w45-q472"
+    },
+    {
+      "id": "CVE-2026-115897",
+      "aliases": [
+        "GHSA-m5mm-p8h7-m29v"
+      ],
+      "summary": "Serialize JavaScript: Cross-site scripting (XSS) via unescaped </script at the end of a serialized function body",
+      "severity": "low",
+      "published": "2026-10-23T22:09:52Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-m5mm-p8h7-m29v"
+    },
+    {
+      "id": "CVE-2026-113872",
+      "aliases": [
+        "GHSA-q7qp-rjg7-q26m"
+      ],
+      "summary": "multer vulnerable to Denial of Service via a pending asynchronous fileFilter after request teardown",
+      "severity": "high",
+      "published": "2026-10-23T22:08:22Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-q7qp-rjg7-q26m"
+    },
+    {
+      "id": "CVE-2026-115886",
+      "aliases": [
+        "GHSA-2wqp-q3c6-ccj5"
+      ],
+      "summary": "MLflow: SSRF on unauthenticated MLflow servers via third-party scorer kwargs in the scorer invoke, register, and GenAI evaluate endpoints",
+      "severity": "medium",
+      "published": "2026-10-23T22:07:26Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-2wqp-q3c6-ccj5"
+    },
+    {
+      "id": "CVE-2026-115883",
+      "aliases": [
+        "GHSA-6hmw-9432-67qq"
+      ],
+      "summary": "LangGraph: Namespace labels containing `.` reach other namespaces in Postgres and SQLite stores",
+      "severity": "medium",
+      "published": "2026-10-23T22:06:44Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-6hmw-9432-67qq"
+    },
+    {
+      "id": "CVE-2026-115895",
+      "aliases": [
+        "GHSA-834v-8h66-3h79"
+      ],
+      "summary": "Happy DOM: Incomplete fix for CVE-2026-33943: unsanitized import alias leads to host code execution",
+      "severity": "high",
+      "published": "2026-10-23T22:06:13Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-834v-8h66-3h79"
+    },
+    {
+      "id": "CVE-2026-115892",
+      "aliases": [
+        "GHSA-9pvw-hwfg-92h5"
+      ],
+      "summary": "Wasmtime: Panic lowering a host-created component model stream into a guest that expects a different payload type",
+      "severity": "medium",
+      "published": "2026-10-23T22:04:45Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-9pvw-hwfg-92h5"
+    },
+    {
+      "id": "CVE-2026-115889",
+      "aliases": [
+        "GHSA-897f-g5gm-fmxm"
+      ],
+      "summary": "Wasmtime: Bit-packing in Cranelift compiler causes silent overflow and miscompilation",
+      "severity": "critical",
+      "published": "2026-10-23T22:02:20Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-897f-g5gm-fmxm"
+    },
+    {
+      "id": "CVE-2026-112906",
+      "aliases": [
+        "GHSA-2g95-wg33-c5x2"
+      ],
+      "summary": "filelock: SoftFileLock evicts a fresh lock file whose watched age another local user's pre-dated file passed on through inode reuse",
+      "severity": "medium",
+      "published": "2026-10-23T22:00:33Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-2g95-wg33-c5x2"
+    },
+    {
+      "id": "CVE-2026-112914",
+      "aliases": [
+        "GHSA-crv4-6mhj-j5jh"
+      ],
+      "summary": "filelock: SoftFileLock stale-break restore follows a swapped-in symbolic link and hard-links a file of the user running the lock into the lock directory",
+      "severity": "medium",
+      "published": "2026-10-23T22:00:11Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-crv4-6mhj-j5jh"
+    },
+    {
+      "id": "CVE-2026-112940",
+      "aliases": [
+        "GHSA-v4x8-3wr5-3wq8"
+      ],
+      "summary": "filelock ReadWriteLock: SQLite reopens the lock database by name, so a planted symlink or journal file makes the lock user's process overwrite or unlink its own files",
+      "severity": "high",
+      "published": "2026-10-23T21:59:08Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-v4x8-3wr5-3wq8"
+    },
+    {
+      "id": "GHSA-h4fr-cmh5-qr62",
+      "aliases": [],
+      "summary": "Fallow: A `.*` glob segment let an analyzed repository make Fallow test paths in the parent of the project root",
+      "severity": "low",
+      "published": "2026-10-23T21:58:16Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-h4fr-cmh5-qr62"
+    },
+    {
+      "id": "CVE-2026-115569",
+      "aliases": [
+        "GHSA-jfwm-3p3c-6hx5"
+      ],
+      "summary": "Fallow: Jest and Vitest `projects` entries let an analyzed repository make Fallow read files outside the project root",
+      "severity": "low",
+      "published": "2026-10-23T21:57:37Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-jfwm-3p3c-6hx5"
+    },
+    {
+      "id": "CVE-2026-112398",
+      "aliases": [
+        "GHSA-5x8w-8jj5-q52h"
+      ],
+      "summary": "Pillow: Heap buffer overflow in FlashPix (FPX) JPEG decoding leads to code execution",
+      "severity": "critical",
+      "published": "2026-10-23T21:55:21Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-5x8w-8jj5-q52h"
+    },
+    {
+      "id": "GHSA-f2hq-32vh-53cc",
+      "aliases": [],
+      "summary": "postal-mime: Quadratic CPU consumption when decoding a header of many joinable RFC 2047 base64 encoded words",
+      "severity": "high",
+      "published": "2026-10-23T21:54:36Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-f2hq-32vh-53cc"
+    },
+    {
+      "id": "CVE-2026-114501",
+      "aliases": [
+        "GHSA-654x-cwwv-5j9c"
+      ],
+      "summary": "Pillow: Arrow export leaks stale heap memory when PILLOW_ALIGNMENT > 1",
+      "severity": "medium",
+      "published": "2026-10-23T21:53:21Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-654x-cwwv-5j9c"
+    },
+    {
+      "id": "GHSA-8c8m-p3m8-cjg8",
+      "aliases": [],
+      "summary": "Nodemailer: A nested comment ends early in addressparser, releasing the rest of the comment as a recipient",
+      "severity": "medium",
+      "published": "2026-10-23T21:53:04Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-8c8m-p3m8-cjg8"
+    },
+    {
+      "id": "GHSA-m943-m63m-w62w",
+      "aliases": [],
+      "summary": "Nodemailer: A \";\" inside a quoted string or comment ends an address group early in addressparser, turning display text into a recipient",
+      "severity": "medium",
+      "published": "2026-10-23T21:51:52Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-m943-m63m-w62w"
+    },
+    {
+      "id": "GHSA-85x2-q946-cp5h",
+      "aliases": [],
+      "summary": "Nodemailer: A \">\" inside a quoted local part ends an angle-addr early in addressparser, delivering to a domain the header does not name",
+      "severity": "medium",
+      "published": "2026-10-23T21:51:18Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-85x2-q946-cp5h"
+    },
+    {
+      "id": "CVE-2026-114509",
+      "aliases": [
+        "GHSA-f9x3-7vq9-cph6"
+      ],
+      "summary": "Laravel TokenGuard authentication bypass through non-string API credentials",
+      "severity": "critical",
+      "published": "2026-10-23T21:50:27Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-f9x3-7vq9-cph6"
+    },
+    {
+      "id": "CVE-2026-114508",
+      "aliases": [
+        "GHSA-5wcm-3v2w-8362"
+      ],
+      "summary": "Laravel relationship inclusion can trigger unauthorized data destruction",
+      "severity": "medium",
+      "published": "2026-10-23T21:47:48Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-5wcm-3v2w-8362"
+    },
+    {
+      "id": "GHSA-xmj3-9gf7-h52w",
+      "aliases": [],
+      "summary": "setuptools: Windows path escape via namespace_packages.txt during legacy wheel installation  Description",
+      "severity": "low",
+      "published": "2026-10-23T21:44:11Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-xmj3-9gf7-h52w"
+    },
+    {
+      "id": "CVE-2026-110306",
+      "aliases": [
+        "GHSA-w74x-v6f9-j3xg"
+      ],
+      "summary": "fast-uri vulnerable to URI scheme spoofing via percent-encoded scheme decoding",
+      "severity": "medium",
+      "published": "2026-10-23T21:41:36Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-w74x-v6f9-j3xg"
+    },
+    {
+      "id": "CVE-2026-110095",
+      "aliases": [
+        "GHSA-xhq7-xmqj-769h"
+      ],
+      "summary": "fast-uri vulnerable to improper path equivalence in relative reference normalization",
+      "severity": "low",
+      "published": "2026-10-23T21:39:34Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-xhq7-xmqj-769h"
+    },
+    {
+      "id": "CVE-2026-110180",
+      "aliases": [
+        "GHSA-wjr9-j795-jxcr"
+      ],
+      "summary": "fast-uri vulnerable to host confusion via unchecked WHATWG host canonicalization",
+      "severity": "medium",
+      "published": "2026-10-23T21:37:59Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-wjr9-j795-jxcr"
+    },
+    {
+      "id": "CVE-2026-110725",
+      "aliases": [
+        "GHSA-333x-w4r6-6crp"
+      ],
+      "summary": "fast-uri vulnerable to scheme injection via an unescaped first-segment colon in suffix references",
+      "severity": "low",
+      "published": "2026-10-23T21:36:40Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-333x-w4r6-6crp"
+    },
+    {
+      "id": "GHSA-7xgj-8392-5q4r",
+      "aliases": [],
+      "summary": "FastMCP: Post-transform component authorization is skipped on direct calls",
+      "severity": "medium",
+      "published": "2026-10-23T21:32:06Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-7xgj-8392-5q4r"
+    },
+    {
+      "id": "GHSA-vqqp-x5qm-5qp4",
+      "aliases": [],
+      "summary": "FastMCP MCP client wrappers construct M2M OAuth providers without issuer binding \u2014 client secret redirectable to attacker-advertised authorization server",
+      "severity": "medium",
+      "published": "2026-10-23T21:31:30Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-vqqp-x5qm-5qp4"
+    },
+    {
+      "id": "CVE-2026-114055",
+      "aliases": [
+        "GHSA-gx7p-2j49-hfq4"
+      ],
+      "summary": "vLLM : DoS via unvalidated mm_processor_kwargs in multimodal image processors (Isaac, InternVL, H2OVL, etc.)",
+      "severity": "high",
+      "published": "2026-10-23T20:58:36Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-gx7p-2j49-hfq4"
+    },
+    {
+      "id": "CVE-2026-114060",
+      "aliases": [
+        "GHSA-pfhg-q3qv-9q6r"
+      ],
+      "summary": "SvelteKit: URL redirection to untrusted site via enhanced form submission",
+      "severity": "low",
+      "published": "2026-10-23T20:58:24Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-pfhg-q3qv-9q6r"
+    },
+    {
+      "id": "CVE-2026-114437",
+      "aliases": [
+        "GHSA-j6qf-3m9c-vwj3"
+      ],
+      "summary": "chi: Client IP spoofing in ClientIPFromXFF via X-Forwarded-For",
+      "severity": "medium",
+      "published": "2026-10-23T20:56:46Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-j6qf-3m9c-vwj3"
+    },
+    {
+      "id": "GHSA-2rqm-h6hv-g79v",
+      "aliases": [],
+      "summary": "odf-kit has HTML injection leading to XSS in odsToHtml() via unescaped style attribute values",
+      "severity": "medium",
+      "published": "2026-10-23T20:55:31Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-2rqm-h6hv-g79v"
+    },
+    {
+      "id": "CVE-2026-115572",
+      "aliases": [
+        "GHSA-6c7f-9265-g8fw"
+      ],
+      "summary": "pypdf: Possible long runtimes for repeated references to the same missing object",
+      "severity": "high",
+      "published": "2026-10-23T20:55:15Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-6c7f-9265-g8fw"
+    },
+    {
+      "id": "CVE-2026-115585",
+      "aliases": [
+        "GHSA-jr96-gvgh-j3r4"
+      ],
+      "summary": "pypdf: Possible long runtimes for repeated malformed cross-reference entries (Follow-up)",
+      "severity": "high",
+      "published": "2026-10-23T20:54:27Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-jr96-gvgh-j3r4"
+    },
+    {
+      "id": "CVE-2026-115580",
+      "aliases": [
+        "GHSA-gmh7-3g9r-mjh5"
+      ],
+      "summary": "pypdf: Possible long runtimes for large xref table header limits",
+      "severity": "high",
+      "published": "2026-10-23T20:54:12Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-gmh7-3g9r-mjh5"
+    },
+    {
+      "id": "CVE-2026-115567",
+      "aliases": [
+        "GHSA-5wjr-9356-4wc8"
+      ],
+      "summary": "Tokio: Race condition in `tokio::time::Interval`",
+      "severity": "medium",
+      "published": "2026-10-23T20:54:00Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-5wjr-9356-4wc8"
+    },
+    {
+      "id": "CVE-2026-115570",
+      "aliases": [
+        "GHSA-jr5w-w6x2-84p9"
+      ],
+      "summary": "Electron: Mitigation for compromised eMudhra intermediate certificates",
+      "severity": "high",
+      "published": "2026-10-23T20:53:41Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-jr5w-w6x2-84p9"
+    },
+    {
+      "id": "CVE-2026-111181",
+      "aliases": [
+        "GHSA-27r3-jxmh-p828"
+      ],
+      "summary": "body-parser vulnerable to Denial of Service via trailing bytes after a compressed request body",
+      "severity": "high",
+      "published": "2026-10-23T20:53:11Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-27r3-jxmh-p828"
+    },
+    {
+      "id": "GHSA-q54r-jf2p-rfr2",
+      "aliases": [],
+      "summary": "gitoxide gix: untrusted .git/config disables filesystem .git-protection path checks via unfiltered protect_options()",
+      "severity": "high",
+      "published": "2026-10-23T20:52:28Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-q54r-jf2p-rfr2"
+    },
+    {
+      "id": "GHSA-mhf7-xp6r-6qrc",
+      "aliases": [],
+      "summary": "Livewire: Authorization bypass in #[Authorize] via reordered parameter keys and #[Json] execution order",
+      "severity": "medium",
+      "published": "2026-10-23T20:51:30Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-mhf7-xp6r-6qrc"
+    },
+    {
+      "id": "GHSA-h53f-rm2w-w7rg",
+      "aliases": [],
+      "summary": "Echo: X-Real-IP extractor trusts the header value instead of the sending peer",
+      "severity": "medium",
+      "published": "2026-10-23T20:50:25Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-h53f-rm2w-w7rg"
+    },
+    {
+      "id": "GHSA-9969-6676-49h5",
+      "aliases": [],
+      "summary": "Echo: WebSocket proxy can retain connections and handlers after client disconnect",
+      "severity": "high",
+      "published": "2026-10-23T20:50:17Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-9969-6676-49h5"
+    },
+    {
+      "id": "GHSA-h7wr-284f-5qvc",
+      "aliases": [],
+      "summary": "Echo: Decompress permits unbounded gzip expansion in v4",
+      "severity": "high",
+      "published": "2026-10-23T20:49:49Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-h7wr-284f-5qvc"
+    },
+    {
+      "id": "GHSA-cxf3-9h37-7rr8",
+      "aliases": [],
+      "summary": "Echo: Rejected WebSocket upgrades can bypass Echo route-level access controls",
+      "severity": "critical",
+      "published": "2026-10-23T20:49:37Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-cxf3-9h37-7rr8"
+    },
+    {
+      "id": "GHSA-x9ff-22gv-65f4",
+      "aliases": [],
+      "summary": "Echo: BodyDump can discard BodyLimit overflow errors for unknown-length requests",
+      "severity": "medium",
+      "published": "2026-10-23T20:49:11Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-x9ff-22gv-65f4"
+    },
+    {
+      "id": "GHSA-f48p-c9v4-h7xv",
+      "aliases": [],
+      "summary": "Echo: BodyDump captures request and response bodies without size limits in v4",
+      "severity": "high",
+      "published": "2026-10-23T20:48:44Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-f48p-c9v4-h7xv"
+    },
+    {
+      "id": "CVE-2026-115419",
+      "aliases": [
+        "GHSA-4v6f-7vjh-6x4m"
+      ],
+      "summary": "Strands Agents SDK: Exposure of data element to wrong session in the A2A Server",
+      "severity": "high",
+      "published": "2026-10-23T20:48:29Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-4v6f-7vjh-6x4m"
+    },
+    {
+      "id": "CVE-2026-115586",
+      "aliases": [
+        "GHSA-cx6f-vjhg-g3cc"
+      ],
+      "summary": "virtualenv: Bash activator leaves the --prompt value unescaped in PS1 when promptvars is off, so prompt expansion later executes it (regression in 21.14.9)",
+      "severity": "high",
+      "published": "2026-10-23T20:47:16Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-cx6f-vjhg-g3cc"
+    },
+    {
+      "id": "CVE-2026-115355",
+      "aliases": [
+        "GHSA-h7ww-273w-6cm8"
+      ],
+      "summary": "Mistune: Path Traversal and XSS in Include directive",
+      "severity": "high",
+      "published": "2026-10-23T20:46:47Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-h7ww-273w-6cm8"
+    },
+    {
+      "id": "CVE-2026-115774",
+      "aliases": [
+        "GHSA-2qrf-pqgx-qh9v"
+      ],
+      "summary": "Twisted: Denial of Service in the Twisted IMAP4 Server via a Negative Literal Size in SEARCH",
+      "severity": "medium",
+      "published": "2026-10-23T20:46:12Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-2qrf-pqgx-qh9v"
+    },
+    {
+      "id": "CVE-2026-115776",
+      "aliases": [
+        "GHSA-53xc-49m8-p798"
+      ],
+      "summary": "Twisted: Unauthenticated Remote Denial of Service in the Twisted IRC Server via an Unbounded Line Buffer",
+      "severity": "high",
+      "published": "2026-10-23T20:45:35Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-53xc-49m8-p798"
+    },
+    {
+      "id": "CVE-2026-115778",
+      "aliases": [
+        "GHSA-cwm5-jh59-mwxr"
+      ],
+      "summary": "Twisted: Unauthenticated Remote Denial of Service in the Twisted conch Telnet Transport via an Unbounded Subnegotiation Buffer",
+      "severity": "high",
+      "published": "2026-10-23T20:45:26Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-cwm5-jh59-mwxr"
+    },
+    {
+      "id": "CVE-2026-115775",
+      "aliases": [
+        "GHSA-3476-c5c2-fr73"
+      ],
+      "summary": "Twisted: Unauthenticated Remote Denial of Service in the Twisted words domish XML Element Stream via an Unbounded Element Tree",
+      "severity": "high",
+      "published": "2026-10-23T20:45:04Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-3476-c5c2-fr73"
+    },
+    {
+      "id": "CVE-2026-115877",
+      "aliases": [
+        "GHSA-q7qq-6mhp-9rc4"
+      ],
+      "summary": "Twisted: HTTP Request Smuggling in twisted.web via a Bare CR or LF in a Header Value",
+      "severity": "medium",
+      "published": "2026-10-23T20:44:43Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-q7qq-6mhp-9rc4"
+    },
+    {
+      "id": "CVE-2026-114050",
+      "aliases": [
+        "GHSA-p92p-rxj5-7p2x"
+      ],
+      "summary": "vLLM: Forged multimodal UUID + P0/P1 processor-cache eviction drift: unauthenticated remote crash of the whole vLLM engine",
+      "severity": "medium",
+      "published": "2026-10-23T20:43:44Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-p92p-rxj5-7p2x"
+    },
+    {
+      "id": "CVE-2026-114061",
+      "aliases": [
+        "GHSA-27mw-82g8-phjj"
+      ],
+      "summary": "SvelteKit : XSS via untrusted cache-control header in prerendered page",
+      "severity": "low",
+      "published": "2026-10-23T20:43:30Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-27mw-82g8-phjj"
+    },
+    {
+      "id": "CVE-2026-115478",
+      "aliases": [
+        "GHSA-r3g7-r4hr-m258"
+      ],
+      "summary": "obsidian-tc: Memory-lifecycle tools overwrite unowned notes or partially commit lifecycle changes",
+      "severity": "high",
+      "published": "2026-10-23T18:47:25Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-r3g7-r4hr-m258"
+    },
+    {
+      "id": "CVE-2026-62204",
+      "aliases": [
+        "GHSA-rpx2-p6hp-x5gj"
+      ],
+      "summary": "SiYuan: Missing consistency check between packageName and repoURL/repoHash in bazaar package install allows overwriting an existing, trusted plugin",
+      "severity": "medium",
+      "published": "2026-10-23T18:38:25Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-rpx2-p6hp-x5gj"
+    },
+    {
+      "id": "CVE-2026-73054",
+      "aliases": [
+        "GHSA-c8w8-3pqp-wr83"
+      ],
+      "summary": "SiYuan: A parser differential between the WebSocket keepalive exemption and the session quarantine allows unauthenticated access to the broadcast event stream",
+      "severity": "high",
+      "published": "2026-10-23T18:34:09Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-c8w8-3pqp-wr83"
+    },
+    {
+      "id": "CVE-2026-73630",
+      "aliases": [
+        "GHSA-4pjg-x8qj-33j5"
+      ],
+      "summary": "SiYuan: authFilePublishAccess distinguishes hidden and forbidden documents from public and nonexistent ones, and issues a publish-auth cookie for documents it reports as forbidden",
+      "severity": "medium",
+      "published": "2026-10-23T18:31:42Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-4pjg-x8qj-33j5"
+    },
+    {
+      "id": "CVE-2026-73049",
+      "aliases": [
+        "GHSA-p4qw-vx5p-g984"
+      ],
+      "summary": "SiYuan: The publish filter for database backlinks consults the forbidden list instead of the visibility list, disclosing hidden-tier documents to anonymous readers",
+      "severity": "medium",
+      "published": "2026-10-23T18:30:42Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-p4qw-vx5p-g984"
+    },
+    {
+      "id": "GHSA-xp3q-r38w-vgqm",
+      "aliases": [],
+      "summary": "SiYuan: The publish filter for local storage returns the administrator's entire storage map with only three keys sanitized",
+      "severity": "medium",
+      "published": "2026-10-23T18:29:45Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-xp3q-r38w-vgqm"
+    },
+    {
+      "id": "CVE-2026-77363",
+      "aliases": [
+        "GHSA-pqh8-4pj7-32xx"
+      ],
+      "summary": "obsidian-tc HTTP transport lacks Origin/DNS-rebinding protection, enabling drive-by vault access on loopback",
+      "severity": "critical",
+      "published": "2026-10-23T18:29:02Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-pqh8-4pj7-32xx"
+    },
+    {
+      "id": "CVE-2026-77362",
+      "aliases": [
+        "GHSA-43r2-c7g8-prc8"
+      ],
+      "summary": "obsidian-tc Bridge tools leak denied-note data via unfiltered sibling fields",
+      "severity": "medium",
+      "published": "2026-10-23T18:28:14Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-43r2-c7g8-prc8"
+    },
+    {
+      "id": "CVE-2026-115477",
+      "aliases": [
+        "GHSA-737x-cwfr-5vvc"
+      ],
+      "summary": "obsidian-tc: Declined human-in-the-loop confirmations can permit destructive calls over HTTP",
+      "severity": "high",
+      "published": "2026-10-23T17:30:10Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-737x-cwfr-5vvc"
+    },
+    {
+      "id": "CVE-2026-77366",
+      "aliases": [
+        "GHSA-84c9-qqpq-2pq5"
+      ],
+      "summary": "obsidian-tc tokens can access arbitrary configured vaults",
+      "severity": "critical",
+      "published": "2026-10-23T17:29:17Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-84c9-qqpq-2pq5"
+    },
+    {
+      "id": "CVE-2026-77364",
+      "aliases": [
+        "GHSA-cvp8-vvgf-69q4"
+      ],
+      "summary": "obsidian-tc: Default folder ACL is fail-open; .obsidian plugin secrets are readable by default",
+      "severity": "medium",
+      "published": "2026-10-23T17:28:40Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-cvp8-vvgf-69q4"
+    },
+    {
+      "id": "CVE-2026-77361",
+      "aliases": [
+        "GHSA-c5xx-h28h-f682"
+      ],
+      "summary": "obsidian-tc : Symlink read-ACL scope bypass via lexical path checks",
+      "severity": "medium",
+      "published": "2026-10-23T17:28:19Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-c5xx-h28h-f682"
+    },
+    {
+      "id": "GHSA-8cqv-vvq2-6p8c",
+      "aliases": [],
+      "summary": "Duplicate Advisory: Mistune: Path Traversal and XSS in Include directive",
+      "severity": "high",
+      "published": "2026-10-22T21:32:36Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-8cqv-vvq2-6p8c"
+    },
+    {
+      "id": "CVE-2026-113721",
+      "aliases": [
+        "GHSA-558c-9hv2-4prj"
+      ],
+      "summary": "virtualenv: Generated files can follow existing destination links",
+      "severity": "medium",
+      "published": "2026-10-22T17:03:12Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-558c-9hv2-4prj"
+    },
+    {
+      "id": "GHSA-78g4-xqwv-q3g8",
+      "aliases": [],
+      "summary": "Pillow: Bundled libopenjp2 2.5.4 in all wheels since 11.1.0 carries OSV-2025-219 heap-buffer-overflow write reachable from Image.open().load()",
+      "severity": "high",
+      "published": "2026-10-22T17:01:08Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-78g4-xqwv-q3g8"
+    },
+    {
+      "id": "CVE-2026-114132",
+      "aliases": [
+        "GHSA-vjh5-4x84-xrqp"
+      ],
+      "summary": "Nuxt: Server-side route rules (`redirect`, `headers`, `proxy`, `ssr`) are skipped for case-variant paths when routing is case-insensitive",
+      "severity": "medium",
+      "published": "2026-10-22T16:59:55Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-vjh5-4x84-xrqp"
+    },
+    {
+      "id": "CVE-2026-114133",
+      "aliases": [
+        "GHSA-xfq5-w38q-pc2x"
+      ],
+      "summary": "Nuxt server islands render `useHeadSafe` input without sanitisation",
+      "severity": "medium",
+      "published": "2026-10-22T16:58:00Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-xfq5-w38q-pc2x"
+    },
+    {
+      "id": "CVE-2026-114130",
+      "aliases": [
+        "GHSA-jjm6-p2m9-9w4x"
+      ],
+      "summary": "Nuxt: Incomplete fix for GHSA-934w-87qh-qr26: a `javascript:` URL prefixed with an ASCII control character executes from `<NuxtLink>` when `pages` is disabled",
+      "severity": "low",
+      "published": "2026-10-22T16:51:37Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-jjm6-p2m9-9w4x"
+    },
+    {
+      "id": "CVE-2026-114131",
+      "aliases": [
+        "GHSA-6gq8-jgmh-3ffp"
+      ],
+      "summary": "Nuxt: Route rules are matched against the raw request path, so a percent-encoded segment can bypass `appMiddleware` on dynamic and catch-all routes",
+      "severity": "medium",
+      "published": "2026-10-22T16:50:53Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-6gq8-jgmh-3ffp"
+    },
+    {
+      "id": "CVE-2026-113789",
+      "aliases": [
+        "GHSA-6vvc-x485-93v7"
+      ],
+      "summary": "pypdf: Possible long runtimes/large memory usage when retrieving form fields",
+      "severity": "medium",
+      "published": "2026-10-22T16:49:56Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-6vvc-x485-93v7"
+    },
+    {
+      "id": "CVE-2026-113790",
+      "aliases": [
+        "GHSA-f54x-cmq8-qg57"
+      ],
+      "summary": "pypdf: Possible large memory usage when parsing arrays and dictionaries",
+      "severity": "medium",
+      "published": "2026-10-22T16:49:40Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-f54x-cmq8-qg57"
+    },
+    {
+      "id": "CVE-2026-113791",
+      "aliases": [
+        "GHSA-cgf9-327m-v77c"
+      ],
+      "summary": "pypdf: Possible large memory usage when parsing content streams",
+      "severity": "medium",
+      "published": "2026-10-22T16:49:22Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-cgf9-327m-v77c"
+    },
+    {
+      "id": "CVE-2026-113796",
+      "aliases": [
+        "GHSA-2p8c-gr87-2676"
+      ],
+      "summary": "Electron: SameSite cookie restrictions are not applied to windows opened from links",
+      "severity": "medium",
+      "published": "2026-10-22T16:47:54Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-2p8c-gr87-2676"
+    },
+    {
+      "id": "CVE-2026-113798",
+      "aliases": [
+        "GHSA-x562-297c-g43g"
+      ],
+      "summary": "Electron: Pointer lock permission requests can be attributed to the wrong frame",
+      "severity": "medium",
+      "published": "2026-10-22T16:47:15Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-x562-297c-g43g"
+    },
+    {
+      "id": "CVE-2026-113797",
+      "aliases": [
+        "GHSA-98mx-cjp9-gchm"
+      ],
+      "summary": "Electron: Extension tabs.query returns tab URLs and titles without the tabs permission",
+      "severity": "low",
+      "published": "2026-10-22T16:46:33Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-98mx-cjp9-gchm"
+    },
+    {
+      "id": "CVE-2026-114122",
+      "aliases": [
+        "GHSA-3qxv-5xgr-q7w9"
+      ],
+      "summary": "Electron: Frame subscription trusts GPU-supplied frame geometry",
+      "severity": "low",
+      "published": "2026-10-22T16:46:06Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-3qxv-5xgr-q7w9"
+    },
+    {
+      "id": "CVE-2026-114124",
+      "aliases": [
+        "GHSA-h3v5-h239-pg29"
+      ],
+      "summary": "Electron: Off-screen rendering on macOS trusts GPU-supplied frame geometry",
+      "severity": "low",
+      "published": "2026-10-22T16:44:33Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-h3v5-h239-pg29"
+    },
+    {
+      "id": "CVE-2026-114121",
+      "aliases": [
+        "GHSA-997q-gvvc-jwmx"
+      ],
+      "summary": "Electron: openExternal permission requests can be attributed to the wrong origin",
+      "severity": "medium",
+      "published": "2026-10-22T16:43:59Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-997q-gvvc-jwmx"
+    },
+    {
+      "id": "GHSA-673q-mjm6-r5xr",
+      "aliases": [],
+      "summary": "Next.js: Unauthenticated Remote Code Execution in `use cache` functions returning typed arrays",
+      "severity": "critical",
+      "published": "2026-10-22T16:42:31Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-673q-mjm6-r5xr"
+    },
+    {
+      "id": "CVE-2026-114145",
+      "aliases": [
+        "GHSA-83vg-56qc-22m7"
+      ],
+      "summary": "GitPython validates a submodule's \".git\" path only after cloning into it (RCE)",
+      "severity": "high",
+      "published": "2026-10-22T16:41:14Z",
+      "known_exploited": false,
+      "source": "GitHub Advisory Database",
+      "url": "https://github.com/advisories/GHSA-83vg-56qc-22m7"
+    }
+  ]
+}
