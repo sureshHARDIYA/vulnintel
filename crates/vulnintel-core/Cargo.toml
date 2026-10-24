@@ -1,6 +1,6 @@
 [package]
 name = "vulnintel-core"
-version = "0.1.0"
+version = "0.1.2"
 edition = "2021"
 license = "MIT"
 description = "Portable vulnerability intelligence categorization and deduplication primitives"
