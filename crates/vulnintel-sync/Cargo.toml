@@ -1,6 +1,6 @@
 [package]
 name = "vulnintel-sync"
-version = "0.1.0"
+version = "0.1.2"
 edition = "2021"
 license = "MIT"
 description = "Durable SQLite-backed public vulnerability intelligence ingestion"
@@ -10,5 +10,5 @@ repository = "https://github.com/sureshHARDIYA/vulnintel"
 rusqlite = { version = "0.32", features = ["bundled"] }
 serde_json = "1"
 reqwest = { version = "0.12", features = ["blocking", "json"] }
-vulnintel-core = { path = "../vulnintel-core", version = "0.1.0" }
-vulnintel-sources = { path = "../vulnintel-sources", version = "0.1.0" }
+vulnintel-core = { path = "../vulnintel-core", version = "0.1.2" }
+vulnintel-sources = { path = "../vulnintel-sources", version = "0.1.2" }
